@@ -1,0 +1,1831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Adapt & Win Experience</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600;700&family=Oswald:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#1e73d8; --blue-strong:#155ec2; --blue-soft:#edf5ff; --blue-mid:#dbeafe;
+  --gold:#f59e0b; --gold-soft:#fef3c7; --gold-dark:#d97706;
+  --green:#16a34a; --green-soft:#dcfce7;
+  --purple:#7c3aed; --purple-soft:#ede9fe;
+  --red:#dc2626; --red-soft:#fee2e2;
+  --navy:#0a192f; --stadium-yellow:#f4d03f;
+  --text:#16324a; --muted:#5f768b; --line:#dbe5ef;
+  --bg:#f6f8fb; --panel:#fff;
+  --shadow:0 8px 32px rgba(22,50,74,.10);
+  --shadow-lg:0 20px 60px rgba(22,50,74,.14);
+  --radius:22px; --max:700px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* SCREENS */
+.screen{display:none;min-height:100vh}
+.screen.active{display:block}
+
+/* PROGRESS */
+.progress-bar{position:fixed;top:0;left:0;right:0;height:3px;background:var(--line);z-index:100}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--gold));transition:width .5s ease}
+
+/* TOP NAV */
+.top-nav{
+  position:fixed;top:3px;left:0;right:0;
+  background:rgba(255,255,255,.95);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+  padding:12px 20px;
+  display:flex;align-items:center;justify-content:space-between;
+  z-index:99;
+}
+.nav-logo{font-family:"Playfair Display",serif;font-size:.95rem;font-weight:700;color:var(--blue-strong);letter-spacing:-.01em}
+.nav-steps{display:flex;gap:5px;align-items:center}
+.nav-dot{width:8px;height:8px;border-radius:50%;background:var(--line);transition:all .3s;cursor:pointer}
+.nav-dot.done{background:var(--blue)}
+.nav-dot.active{background:var(--gold);width:20px;border-radius:4px}
+.nav-dot.locked{background:var(--line);cursor:default}
+
+/* MODULE TAB BAR */
+.module-nav{
+  display:flex;gap:6px;overflow-x:auto;padding:10px 16px;
+  background:white;border-bottom:1px solid var(--line);
+  position:sticky;top:56px;z-index:90;scrollbar-width:none;
+}
+.module-nav::-webkit-scrollbar{display:none}
+.module-tab{
+  display:flex;align-items:center;gap:5px;padding:7px 14px;
+  border-radius:100px;font-size:.78rem;font-weight:600;
+  white-space:nowrap;cursor:pointer;transition:all .2s;
+  border:1.5px solid transparent;flex-shrink:0;
+}
+.module-tab.active{background:var(--blue);color:var(--blue-strong)}
+.module-tab.done{background:var(--green-soft);color:#14532d;border-color:rgba(22,163,74,.2)}
+.module-tab.available{background:white;color:var(--muted);border-color:var(--line)}
+.module-tab.locked{background:#f8fafc;color:#cbd5e1;border-color:var(--line);cursor:default;opacity:.7}
+
+/* WRAP */
+.wrap{max-width:var(--max);margin:0 auto;padding:0 18px 80px}
+
+/* HERO BAND */
+.hero-band{
+  padding:88px 18px 32px;text-align:center;
+  background:linear-gradient(180deg,#fff 0%,var(--bg) 100%);
+  max-width:var(--max);margin:0 auto;
+}
+.module-badge{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:7px 15px;border-radius:100px;
+  font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  margin-bottom:16px;
+}
+.badge-blue{background:var(--blue-soft);color:var(--blue-strong);border:1px solid rgba(30,115,216,.2)}
+.badge-gold{background:var(--gold-soft);color:#92400e;border:1px solid rgba(245,158,11,.25)}
+
+.hero-num{
+  font-family:"Playfair Display",serif;font-size:80px;font-weight:900;
+  line-height:1;opacity:.08;color:var(--text);margin-bottom:-16px;
+}
+h1.hero-title{
+  font-family:"Playfair Display",serif;
+  font-size:clamp(2rem,6vw,2.8rem);font-weight:900;
+  line-height:1.08;letter-spacing:-.035em;color:var(--text);margin-bottom:12px;
+}
+h1.hero-title em{font-style:italic;color:var(--blue)}
+.hero-sub{font-size:1rem;color:var(--muted);line-height:1.7;max-width:500px;margin:0 auto 24px}
+
+/* CARDS */
+.card{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:var(--radius);box-shadow:var(--shadow);
+  overflow:hidden;margin-bottom:18px;
+}
+.card-inner{padding:24px 24px 20px}
+.card-label{
+  font-size:10px;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--blue);margin-bottom:8px;
+}
+.card-label.gold{color:#92400e}
+h2.card-title{
+  font-family:"Playfair Display",serif;font-size:1.35rem;font-weight:700;
+  line-height:1.2;letter-spacing:-.02em;color:var(--text);margin-bottom:10px;
+}
+.card-body{color:var(--muted);font-size:.93rem;line-height:1.7}
+
+/* PILLAR LIST */
+.pillar{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--line)}
+.pillar:last-child{border-bottom:none}
+.pillar-icon{
+  width:42px;height:42px;border-radius:12px;
+  background:var(--blue-soft);border:1px solid rgba(30,115,216,.18);
+  display:flex;align-items:center;justify-content:center;
+  font-size:19px;flex-shrink:0;
+}
+.pillar-text h4{font-size:.93rem;font-weight:600;color:var(--text);margin-bottom:3px;line-height:1.3}
+.pillar-text p{font-size:.84rem;color:var(--muted);line-height:1.6;margin:0}
+
+/* STAT CALLOUT */
+.stat-callout{
+  background:linear-gradient(135deg,var(--blue-soft),#dbeafe);
+  border:1px solid rgba(30,115,216,.2);border-radius:18px;
+  padding:22px;text-align:center;margin:18px 0;
+}
+.stat-callout .num{
+  font-family:"Playfair Display",serif;font-size:3rem;
+  font-weight:900;color:var(--blue-strong);line-height:1;
+}
+.stat-callout .lbl{font-size:.88rem;color:var(--muted);margin-top:7px;line-height:1.5}
+.stat-callout .src{font-size:.7rem;color:#93aabb;margin-top:7px}
+
+/* DEEPER DIVE */
+.dd-trigger{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 24px;
+  background:linear-gradient(135deg,#f0f7ff,#e8f2ff);
+  border-top:1px solid rgba(30,115,216,.1);
+  cursor:pointer;transition:background .2s;user-select:none;
+}
+.dd-trigger:hover{background:linear-gradient(135deg,#e4f0ff,#d8eaff)}
+.dd-left{display:flex;align-items:center;gap:12px}
+.dd-icon{
+  width:34px;height:34px;border-radius:9px;
+  background:var(--blue);display:flex;align-items:center;
+  justify-content:center;font-size:15px;
+}
+.dd-text strong{display:block;font-size:.85rem;font-weight:600;color:var(--blue-strong)}
+.dd-text span{font-size:.76rem;color:var(--muted)}
+.dd-arrow{font-size:16px;color:var(--blue);transition:transform .3s}
+.dd-trigger.open .dd-arrow{transform:rotate(180deg)}
+.dd-content{
+  display:none;padding:24px;
+  border-top:1px solid var(--line);background:#fafcff;
+}
+.dd-content.open{display:block;animation:slideDown .3s ease}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+
+/* QUIZ */
+.quiz-option{
+  padding:13px 16px;border:1.5px solid var(--line);border-radius:12px;
+  margin:8px 0;cursor:pointer;transition:all .2s;
+  font-size:.9rem;color:var(--text);background:white;text-align:left;width:100%;
+}
+.quiz-option:hover{border-color:var(--blue);background:var(--blue-soft)}
+.quiz-option.selected{border-color:var(--blue);background:var(--blue);color:var(--blue-strong)}
+.quiz-progress{height:4px;background:var(--line);border-radius:2px;margin-bottom:20px}
+.quiz-progress-fill{height:100%;background:var(--blue);border-radius:2px;transition:.3s}
+.result-chart{height:100px;background:var(--blue-soft);border-radius:12px;margin:16px 0;display:flex;align-items:flex-end;justify-content:center;gap:32px;padding:12px}
+.result-bar{width:60px;border-radius:8px;transition:.5s;position:relative;height:0}
+.result-bar span{position:absolute;top:-22px;left:50%;transform:translateX(-50%);font-size:12px;font-weight:700}
+.result-bar.focus-bar{background:var(--blue)}
+.result-bar.calm-bar{background:var(--purple)}
+.chart-labels{display:flex;justify-content:center;gap:64px;font-size:.75rem;color:var(--muted);margin-top:4px}
+
+/* WELLNESS GRID */
+.wellness-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}
+.wellness-card{border-radius:16px;padding:20px 16px;text-align:center;border:1px solid var(--line)}
+.wellness-card.focus-card{background:linear-gradient(160deg,#eff6ff,#dbeafe)}
+.wellness-card.calm-card{background:linear-gradient(160deg,#fdf4ff,#ede9fe)}
+.wellness-card .wc-icon{font-size:44px;margin-bottom:10px}
+.wellness-card h4{font-size:.95rem;font-weight:700;margin-bottom:5px}
+.wellness-card.focus-card h4{color:#1d4ed8}
+.wellness-card.calm-card h4{color:#7e22ce}
+.wellness-card p{font-size:.81rem;color:var(--muted);line-height:1.55;margin:0}
+
+/* BUTTONS */
+.btn-primary{
+  display:block;width:100%;background:var(--blue);color:white;
+  border:none;border-radius:100px;padding:16px 24px;
+  font-family:"DM Sans",sans-serif;font-size:.97rem;font-weight:600;
+  cursor:pointer;text-align:center;
+  box-shadow:0 8px 24px rgba(30,115,216,.3);transition:all .2s;
+}
+.btn-primary:hover{background:var(--blue-strong);box-shadow:0 12px 32px rgba(30,115,216,.4);transform:translateY(-1px)}
+.btn-gold{
+  display:block;width:100%;
+  background:linear-gradient(135deg,#f59e0b,#d97706);color:white;
+  border:none;border-radius:100px;padding:16px 24px;
+  font-family:"DM Sans",sans-serif;font-size:.97rem;font-weight:600;
+  cursor:pointer;text-align:center;
+  box-shadow:0 8px 24px rgba(245,158,11,.35);transition:all .2s;
+}
+.btn-gold:hover{box-shadow:0 12px 32px rgba(245,158,11,.45);transform:translateY(-1px)}
+.btn-ghost{
+  display:block;width:100%;background:transparent;color:var(--muted);
+  border:none;padding:13px 24px;font-family:"DM Sans",sans-serif;
+  font-size:.9rem;cursor:pointer;text-align:center;transition:color .2s;
+}
+.btn-ghost:hover{color:var(--text)}
+.section-footer{padding:0 18px 32px;max-width:var(--max);margin:0 auto}
+
+/* PAYWALL */
+.price-block{
+  background:white;border:2px solid var(--blue);border-radius:24px;
+  padding:28px 24px;text-align:center;margin:20px 0;
+  box-shadow:0 16px 48px rgba(30,115,216,.12);
+}
+.price-main{
+  font-family:"Playfair Display",serif;font-size:3.8rem;
+  font-weight:900;color:var(--text);line-height:1;letter-spacing:-.04em;
+}
+.price-period{font-size:.85rem;color:var(--muted);margin-top:4px;margin-bottom:22px}
+.paywall-modules{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0}
+.pw-mod{background:white;border:1px solid var(--line);border-radius:16px;padding:16px 14px;text-align:left;}
+.pw-mod .pm-icon{font-size:22px;margin-bottom:7px}
+.pw-mod h4{font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:3px}
+.pw-mod p{font-size:.79rem;color:var(--muted);line-height:1.5;margin:0}
+
+/* SPLASH */
+.splash{
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;
+  padding:40px 22px;
+  background:linear-gradient(160deg,#fff 0%,#edf5ff 50%,#f6f8fb 100%);
+}
+.splash-logo{
+  font-family:"Playfair Display",serif;font-size:1rem;font-weight:700;
+  color:var(--blue-strong);letter-spacing:.04em;text-transform:uppercase;margin-bottom:40px;
+}
+.splash-headline{
+  font-family:"Playfair Display",serif;
+  font-size:clamp(2.4rem,7vw,3.4rem);font-weight:900;
+  line-height:1.05;letter-spacing:-.04em;color:var(--text);margin-bottom:18px;max-width:540px;
+}
+.splash-headline em{font-style:italic;color:var(--blue)}
+.splash-sub{font-size:1rem;color:var(--muted);line-height:1.7;max-width:420px;margin:0 auto 36px}
+.target-pills{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:36px}
+.target-pill{
+  background:var(--blue-soft);color:var(--blue-strong);
+  border:1px solid rgba(30,115,216,.2);border-radius:100px;
+  padding:7px 15px;font-size:.83rem;font-weight:500;
+}
+
+/* NAME SCREEN */
+.name-screen{
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;padding:40px 22px;background:white;
+}
+.name-wrap{width:100%;max-width:380px;text-align:center}
+.name-wrap h2{
+  font-family:"Playfair Display",serif;font-size:1.9rem;
+  font-weight:900;letter-spacing:-.03em;margin-bottom:10px;
+}
+.name-wrap p{color:var(--muted);font-size:.93rem;line-height:1.65;margin-bottom:28px}
+.name-input{
+  width:100%;padding:15px 18px;border:2px solid var(--line);border-radius:14px;
+  font-family:"DM Sans",sans-serif;font-size:1.05rem;color:var(--text);outline:none;
+  transition:border-color .2s;margin-bottom:14px;text-align:center;
+}
+.name-input:focus{border-color:var(--blue)}
+
+/* READINESS PROMPT */
+.readiness-prompt{
+  text-align:center;padding:22px 20px 8px;
+  font-family:"Playfair Display",serif;
+  font-size:1.4rem;font-weight:700;color:var(--blue-strong);
+  letter-spacing:-.02em;line-height:1.3;
+}
+
+/* APP FOOTER */
+.app-footer{
+  padding:40px 18px;text-align:center;
+  max-width:var(--max);margin:0 auto;
+}
+.disclaimer{
+  font-size:0.75rem;color:var(--muted);
+  line-height:1.6;opacity:0.8;
+}
+
+@media(max-width:480px){
+  .wellness-grid,.paywall-modules{grid-template-columns:1fr}
+}
+
+/* INTRO SCREEN */
+.intro-screen{
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:flex-start;
+  padding:0 0 60px;background:#f8faff;color:var(--text);
+}
+.intro-hero{
+  width:100%;text-align:center;
+  padding:64px 24px 48px;
+  background:linear-gradient(160deg,#edf5ff 0%,#dbeafe 60%,#eff6ff 100%);
+  border-bottom:1px solid var(--line);
+}
+.intro-eyebrow{
+  font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--blue-strong);margin-bottom:20px;
+}
+.intro-headline{
+  font-family:"Playfair Display",serif;
+  font-size:clamp(2.2rem,7vw,3.2rem);font-weight:900;
+  line-height:1.05;letter-spacing:-.04em;color:var(--text);
+  margin-bottom:18px;max-width:560px;margin-left:auto;margin-right:auto;
+}
+.intro-headline em{font-style:italic;color:var(--blue)}
+.intro-deck{
+  font-size:1rem;color:var(--muted);line-height:1.75;
+  max-width:460px;margin:0 auto;
+}
+.intro-stats{
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;
+  background:var(--line);
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+  width:100%;max-width:700px;
+}
+.intro-stat{
+  padding:24px 16px;text-align:center;
+  background:#f8faff;
+}
+.intro-stat .n{
+  font-family:"Playfair Display",serif;
+  font-size:clamp(1.8rem,5vw,2.6rem);font-weight:900;
+  color:var(--blue-strong);line-height:1;margin-bottom:6px;
+}
+.intro-stat .l{font-size:.75rem;color:var(--muted);line-height:1.5}
+.intro-shifts{width:100%;max-width:700px;padding:32px 24px 0;}
+.intro-shifts-title{
+  font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:20px;
+}
+.intro-shift{
+  display:flex;align-items:flex-start;gap:16px;
+  padding:18px 0;border-bottom:1px solid var(--line);
+}
+.intro-shift:last-child{border-bottom:none}
+.shift-from-to{flex:1}
+.shift-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.shift-from{font-size:.9rem;color:#aab8c8;text-decoration:line-through;margin-bottom:2px}
+.shift-to{font-size:.95rem;color:var(--text);font-weight:600}
+.shift-arrow{color:var(--blue);font-size:1.2rem;padding-top:18px;flex-shrink:0}
+.intro-cta{width:100%;max-width:700px;padding:32px 24px 0;}
+.intro-mission{
+  background:var(--blue-soft);border:1px solid rgba(30,115,216,.15);
+  border-radius:18px;padding:22px 20px;margin-bottom:22px;
+}
+.intro-mission p{font-size:.93rem;color:var(--text);line-height:1.75;margin:0}
+.intro-mission p strong{color:var(--blue-strong)}
+
+/* WRAPUP SCREEN */
+.wrapup-screen{
+  min-height:100vh;background:linear-gradient(160deg,#fff 0%,#edf5ff 60%,#f6f8fb 100%);
+}
+.wrapup-hero{
+  text-align:center;padding:72px 24px 36px;
+  max-width:var(--max);margin:0 auto;
+}
+.wrapup-badge{
+  display:inline-flex;align-items:center;gap:7px;
+  background:var(--green-soft);color:#14532d;
+  border:1px solid rgba(22,163,74,.25);
+  border-radius:100px;padding:7px 16px;
+  font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  margin-bottom:18px;
+}
+.wrapup-headline{
+  font-family:"Playfair Display",serif;
+  font-size:clamp(2rem,6vw,2.8rem);font-weight:900;
+  line-height:1.08;letter-spacing:-.035em;color:var(--text);margin-bottom:14px;
+}
+.wrapup-headline em{font-style:italic;color:var(--blue)}
+.wrapup-sub{font-size:1rem;color:var(--muted);line-height:1.7;max-width:480px;margin:0 auto}
+.module-recap{
+  display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0;
+}
+.recap-card{
+  background:white;border:1px solid var(--line);border-radius:18px;
+  padding:18px 16px;text-align:left;
+}
+.recap-icon{font-size:24px;margin-bottom:8px}
+.recap-title{font-size:.88rem;font-weight:700;color:var(--text);margin-bottom:4px}
+.recap-takeaway{font-size:.78rem;color:var(--muted);line-height:1.55;margin:0}
+.next-steps{margin:8px 0}
+.next-step{
+  display:flex;align-items:flex-start;gap:14px;
+  padding:14px 0;border-bottom:1px solid var(--line);
+}
+.next-step:last-child{border-bottom:none}
+.ns-num{
+  width:28px;height:28px;border-radius:50%;
+  background:var(--blue);color:white;
+  font-size:.78rem;font-weight:700;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  margin-top:1px;
+}
+.ns-text h4{font-size:.9rem;font-weight:600;color:var(--text);margin-bottom:2px}
+.ns-text p{font-size:.82rem;color:var(--muted);line-height:1.55;margin:0}
+.wrapup-final{
+  background:var(--blue-soft);border:1px solid rgba(30,115,216,.2);border-radius:22px;
+  padding:28px 24px;text-align:center;margin:20px 0;
+}
+.wrapup-final p{
+  font-family:"Playfair Display",serif;
+  font-size:1.25rem;font-weight:700;
+  color:var(--blue-strong);line-height:1.45;margin:0 0 8px;
+}
+.wrapup-final span{font-size:.83rem;color:var(--muted);line-height:1.6}
+@media(max-width:480px){
+  .intro-stats{grid-template-columns:1fr}
+  .module-recap{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+
+<nav class="top-nav" id="topNav" style="display:none">
+  <div class="nav-logo">Adapt &amp; Win</div>
+  <div class="nav-steps">
+    <div class="nav-dot active"></div>
+    <div class="nav-dot locked"></div>
+    <div class="nav-dot locked"></div>
+    <div class="nav-dot locked"></div>
+    <div class="nav-dot locked"></div>
+  </div>
+</nav>
+
+<div class="module-nav" id="moduleNav" style="display:none">
+  <div class="module-tab done" id="tab-m0" data-screen="m0">✓ BetterYou</div>
+  <div class="module-tab locked" id="tab-m1" data-screen="m1">📋 Playbook</div>
+  <div class="module-tab locked" id="tab-m2" data-screen="m2">🤝 BetterConnections</div>
+  <div class="module-tab locked" id="tab-m3" data-screen="m3">🤖 AgentClarity</div>
+  <div class="module-tab locked" id="tab-command" data-screen="command">🕹️ Command Center</div>
+</div>
+
+<div class="screen active" id="screen-splash">
+<div class="splash">
+  <div class="splash-logo">Adapt &amp; Win Experience</div>
+  <h1 class="splash-headline">The workplace changed.<br><em>Your move.</em></h1>
+  <p class="splash-sub">A complete experience for workers navigating the AI era — whether you've been displaced, feel the pressure building, or want to forge ahead with a real edge.</p>
+  <div class="target-pills">
+    <div class="target-pill">Displaced Workers</div>
+    <div class="target-pill">Feeling the Pressure</div>
+    <div class="target-pill">Ready to Forge Ahead</div>
+  </div>
+  <div style="width:100%;max-width:380px">
+    <button class="btn-primary" onclick="goTo('name')">Begin Your Experience →</button>
+    <p style="margin-top:12px;font-size:.8rem;color:var(--muted)">Module 1 is free. No credit card required.</p>
+  </div>
+</div>
+</div>
+
+<div class="screen" id="screen-name">
+<div class="name-screen">
+  <div class="name-wrap">
+    <div style="font-size:46px;margin-bottom:18px">👋</div>
+    <h2>What should we call you?</h2>
+    <p>This experience is built around you. Share your first name so we can make it personal.</p>
+    <input type="text" class="name-input" id="userNameInput" placeholder="Your first name" maxlength="30"/>
+    <button class="btn-primary" onclick="submitName()">Let's Get Started →</button>
+    <button class="btn-ghost" onclick="submitName(true)">Skip for now</button>
+  </div>
+</div>
+</div>
+
+<div class="screen" id="screen-intro">
+<div class="intro-screen">
+  <div class="intro-hero">
+    <div class="intro-eyebrow">The New Workplace Reality</div>
+    <h1 class="intro-headline">The ground shifted.<br><em>Most workers weren't warned.</em></h1>
+    <p class="intro-deck">AI didn't just change software. It changed what employers reward, how roles are defined, and what separates the workers who thrive from those who get left behind.</p>
+  </div>
+
+  <div class="intro-stats">
+    <div class="intro-stat">
+      <div class="n">56%</div>
+      <div class="l">higher earnings for workers with AI skills — PwC 2025</div>
+    </div>
+    <div class="intro-stat">
+      <div class="n">40%</div>
+      <div class="l">of core job skills will change in the next 5 years — WEF</div>
+    </div>
+    <div class="intro-stat">
+      <div class="n">85M</div>
+      <div class="l">jobs expected to be displaced by automation this decade — WEF</div>
+    </div>
+  </div>
+
+  <div class="intro-shifts">
+    <div class="intro-shifts-title">What changed — and what it means for you</div>
+
+    <div class="intro-shift">
+      <div class="shift-from-to">
+        <div class="shift-label">Before</div>
+        <div class="shift-from">Complete tasks. Follow the process. Stay in your lane.</div>
+        <div class="shift-label" style="margin-top:10px">Now</div>
+        <div class="shift-to">Drive results. Direct systems. Show measurable impact.</div>
+      </div>
+      <div class="shift-arrow">→</div>
+    </div>
+
+    <div class="intro-shift">
+      <div class="shift-from-to">
+        <div class="shift-label">Before</div>
+        <div class="shift-from">Managing people was the measure of seniority.</div>
+        <div class="shift-label" style="margin-top:10px">Now</div>
+        <div class="shift-to">Orchestrating AI agents is the new leadership currency.</div>
+      </div>
+      <div class="shift-arrow">→</div>
+    </div>
+
+    <div class="intro-shift">
+      <div class="shift-from-to">
+        <div class="shift-label">Before</div>
+        <div class="shift-from">Years of experience earned you protection from disruption.</div>
+        <div class="shift-label" style="margin-top:10px">Now</div>
+        <div class="shift-to">Adaptability and AI fluency earn you that protection instead.</div>
+      </div>
+      <div class="shift-arrow">→</div>
+    </div>
+
+    <div class="intro-shift">
+      <div class="shift-from-to">
+        <div class="shift-label">Before</div>
+        <div class="shift-from">Resumes and job boards were the path back in.</div>
+        <div class="shift-label" style="margin-top:10px">Now</div>
+        <div class="shift-to">Proof of work, visible outcomes, and AI-powered positioning win the role.</div>
+      </div>
+      <div class="shift-arrow">→</div>
+    </div>
+  </div>
+
+  <div class="intro-cta">
+    <div class="intro-mission">
+      <p>This app exists for one reason: <strong>to wake you up to the new rules, give you the skills the new workplace demands, and prepare you not just to survive this shift — but to get ahead of it.</strong></p>
+      <p style="margin-top:12px">The only real constant in life is change. The workers who win are the ones who get ready before everyone else does.</p>
+    </div>
+    <button class="btn-gold" onclick="goTo('m0')" style="max-width:100%">I'm Ready — Let's Begin →</button>
+    <p style="text-align:center;color:var(--muted);font-size:.78rem;margin-top:12px">Module 1 is free. No credit card required.</p>
+  </div>
+</div>
+</div>
+
+<div class="screen" id="screen-m0">
+<div style="height:56px"></div>
+<div class="hero-band">
+  <div class="module-badge badge-blue">Module 1 &nbsp;·&nbsp; Free</div>
+  <div class="hero-num">01</div>
+  <h1 class="hero-title">Better<em>You</em></h1>
+  <p class="hero-sub">Before tactics and tools, clarity starts here — with an honest look at how you're wired, where you're stuck, and what will actually move you forward.</p>
+</div>
+
+<div class="wrap">
+  <div class="card">
+    <div class="card-inner">
+      <div class="module-badge badge-blue" style="margin-bottom:14px">🎯 Personalization Quiz</div>
+      <h2 class="card-title">Discover your growth priority — Focus or Calm?</h2>
+      <p class="card-body" style="margin-bottom:18px">10 questions. Identifies whether your biggest opportunity is sharpening your executive focus or quieting your anxiety pattern. No right or wrong answers.</p>
+      <div class="wellness-grid">
+        <div class="wellness-card focus-card">
+          <div class="wc-icon">🧠</div>
+          <h4>BetterFocus</h4>
+          <p>Sharpen how you think, process, and execute.</p>
+        </div>
+        <div class="wellness-card calm-card">
+          <div class="wc-icon">🧘</div>
+          <h4>BetterCalm</h4>
+          <p>Steady how you respond under pressure.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DEEPER DIVE -->
+  <div class="dd-trigger" onclick="toggleDD(this)">
+    <div class="dd-left">
+      <div class="dd-icon">📊</div>
+      <div class="dd-text">
+        <strong>Deeper Dive: Take the Full BetterYou Quiz</strong>
+        <span>10 questions · BetterFocus or BetterCalm profile · Tools and brain hacks</span>
+      </div>
+    </div>
+    <div class="dd-arrow">▼</div>
+  </div>
+  <div class="dd-content">
+
+    <!-- Quiz -->
+    <div id="by-quiz-start">
+      <p style="color:var(--muted);font-size:.9rem;line-height:1.7;margin-bottom:6px">Answer honestly. Your results reveal whether BetterFocus or BetterCalm is your priority right now.</p>
+      <p style="color:var(--muted);font-size:.8rem;line-height:1.6;margin-bottom:18px;font-style:italic">Not a diagnosis — a practical check-in to help you understand where you are today.</p>
+      <button class="btn-primary" onclick="byStartQuiz()">Start the Quiz →</button>
+    </div>
+
+    <div id="by-quiz-active" style="display:none">
+      <div class="quiz-progress"><div class="quiz-progress-fill" id="by-progress-fill" style="width:0%"></div></div>
+      <p style="font-size:.75rem;color:var(--muted);margin:8px 0 14px" id="by-q-counter">Question 1 of 10</p>
+      <h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;margin-bottom:16px;line-height:1.4" id="by-question"></h3>
+      <div id="by-options"></div>
+      <button class="btn-primary" id="by-next-btn" onclick="byNextQ()" disabled style="margin-top:16px">Next →</button>
+    </div>
+
+    <div id="by-quiz-results" style="display:none">
+      <div id="by-result-bars" style="margin-bottom:18px"></div>
+      <div id="by-result-content"></div>
+      <button class="btn-primary" style="margin-top:16px" onclick="byRestartQuiz()">Retake Quiz →</button>
+    </div>
+
+  </div><!-- end dd-content -->
+
+  <div class="card">
+    <div class="card-inner">
+      <div class="card-label">Your Foundation</div>
+      <h2 class="card-title">Five principles that carry you through what's ahead</h2>
+      <div>
+        <div class="pillar">
+          <div class="pillar-icon">🏗️</div>
+          <div class="pillar-text"><h4>Stability Before Strategy</h4><p>You can't build a clear plan from a shaky foundation. Getting steady is the first move.</p></div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon">🔍</div>
+          <div class="pillar-text"><h4>Honest Self-Inventory</h4><p>Your real strengths — not the ones on your last resume — are your most valuable asset right now.</p></div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon">🚀</div>
+          <div class="pillar-text"><h4>Adaptability as a Skill</h4><p>The ability to pivot isn't a personality trait; it's a muscle you build through reps.</p></div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon">🤖</div>
+          <div class="pillar-text"><h4>AI as Your Co-Pilot</h4><p>The goal isn't to compete with AI. It's to use it to amplify your uniquely human judgment.</p></div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon">🏆</div>
+          <div class="pillar-text"><h4>The Long Game</h4><p>Short-term wins matter, but the winners of this era are those who can sustain their pace.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="readiness-prompt">Ready to see what's next?</div>
+  <div class="section-footer">
+    <p id="paywallInstruction" style="text-align:center;color:var(--muted);font-size:.82rem;line-height:1.5;margin:0 0 12px">On the next screen, just enter $0 to continue — no payment required.</p>
+    <button class="btn-primary" onclick="goTo('paywall')">I'm Ready — Show Me What's Next →</button>
+  </div>
+</div>
+</div>
+
+<div class="screen" id="screen-paywall">
+<div style="height:56px"></div>
+<div class="hero-band">
+  <div class="module-badge badge-gold">Complete Experience</div>
+  <h1 class="hero-title">You felt it.<br><em>Now do something about it.</em></h1>
+  <p class="hero-sub">BetterYou showed you where you are. The full system shows you exactly what to do next — and gives you the tools to do it.</p>
+</div>
+
+<div class="wrap">
+  <div class="card">
+    <div class="card-inner">
+      <div class="card-label gold">Why This Matters Right Now</div>
+      <h2 class="card-title">"The old workplace rewarded tasks. The new workplace rewards results."</h2>
+      <p class="card-body">Most workers know the rules changed. Very few know how to play by the new ones. That gap — between knowing and doing — is exactly what the next four modules close.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-inner">
+      <div class="card-label">What You Unlock</div>
+      <div class="pillar">
+        <div class="pillar-icon">📋</div>
+        <div class="pillar-text"><h4>The Playbook — your game plan</h4><p>A step-by-step career navigation system built for the AI era. Stabilize, reposition, execute, and win. Includes a real runway calculator and proof-of-work drill.</p></div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">🤝</div>
+        <div class="pillar-text"><h4>BetterConnections — communicate to win</h4><p>How to make instant connections with decision makers, handle high-stakes conversations, and communicate upward with precision when it counts most.</p></div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">🤖</div>
+        <div class="pillar-text"><h4>AgentClarity — your AI execution edge</h4><p>Move from vague prompting to repeatable workflows. The 56% earnings gap between AI-fluent and AI-absent workers is real. Start closing it today.</p></div>
+      </div>
+      <div class="pillar" style="border-bottom:none">
+        <div class="pillar-icon">🕹️</div>
+        <div class="pillar-text"><h4>Command Center — fast answers when you need them</h4><p>Practical Q&amp;A for the moments that matter: layoffs, interviews, AI in the workplace, staying employed through change.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stat-callout" style="margin-bottom:18px">
+    <div class="num">$19.95</div>
+    <div class="lbl">One-time. Lifetime access. No subscription.</div>
+    <div class="src">Less than a single hour with a career coach. More than a single conversation can give you.</div>
+  </div>
+
+  <div class="price-block">
+    <button class="btn-gold" onclick="handlePaywall()" style="margin-bottom:14px">Unlock the Full Experience →</button>
+    <p style="font-size:.8rem;color:var(--muted);line-height:1.6;margin:0">Join workers who refused to be left behind. One payment. Everything included.</p>
+  </div>
+
+  <div class="app-footer">
+    <p class="disclaimer">This experience is for educational purposes only and does not constitute medical, psychological, or financial advice.</p>
+  </div>
+</div>
+</div>
+
+
+<div class="screen" id="screen-m1">
+<div style="height:56px"></div>
+<div class="hero-band">
+  <div class="module-badge badge-blue">Module 2</div>
+  <div class="hero-num">02</div>
+  <h1 class="hero-title">The <em>Playbook</em></h1>
+  <p class="hero-sub">A practical game plan for navigating the AI-era job market — whether you just got hit or you're preparing your next move.</p>
+</div>
+
+<div class="wrap">
+  <div class="card">
+    <div class="card-inner">
+      <div class="card-label">Workplace Shift</div>
+      <h2 class="card-title">GET BACK IN THE GAME!</h2>
+      <p class="card-body">The Playbook translates AI disruption into a practical career game plan: stabilize, reposition, execute, and win.</p>
+      <div class="stat-callout">
+        <div class="num">Tasks → Results</div>
+        <div class="lbl">The old workplace rewarded task completion. The new workplace rewards visible outcomes, leverage, and direction.</div>
+        <div class="src">AI-Engineered. Human-Inspired. Results-Driven.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-inner">
+      <div class="card-label">What Changed</div>
+      <h2 class="card-title">Three shifts shaping the field now</h2>
+      <div class="pillar">
+        <div class="pillar-icon">⚡</div>
+        <div class="pillar-text"><h4>The AI Blitz</h4><p>Screening is automated. Fast. Cold. If you do not show AI fluency and capability, you can get filtered out before a human ever enters the loop.</p></div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">👥</div>
+        <div class="pillar-text"><h4>The Invisible Roster</h4><p>Many roles are filled through internal scouting before they hit a job board. If you only apply to postings, you are playing in the loudest, most crowded part of the stadium.</p></div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">📈</div>
+        <div class="pillar-text"><h4>The Value Shift</h4><p>The job did not vanish. The role compressed. The people who win now direct systems, drive outcomes, and show proof of useful results.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dd-trigger" onclick="toggleDD(this)">
+    <div class="dd-left">
+      <div class="dd-icon">📘</div>
+      <div class="dd-text">
+        <strong>Deeper Dive: Your Full 30-Day Game Plan</strong>
+        <span>Runway calculator · 4-week sprint · Proof-of-work · AI drills</span>
+      </div>
+    </div>
+    <div class="dd-arrow">▼</div>
+  </div>
+  <div class="dd-content">
+
+    <div class="card" style="box-shadow:none;margin-bottom:14px;background:var(--blue-soft);border-color:rgba(30,115,216,.2)">
+      <div class="card-inner">
+        <div class="card-label">Pre-Game</div>
+        <h2 class="card-title">The Blindside Hit</h2>
+        <p class="card-body">If you're reading this, you just got popped. "Restructuring." "RIF." "Budget realignment." Translation: the league changed and your name didn't make this week's roster.</p>
+        <p class="card-body" style="margin-top:10px">Here's the straight truth: <strong>You didn't become worthless.</strong> The stadium upgraded to new turf, and a chunk of professional work got automated, compressed, or outsourced to software.</p>
+        <p class="card-body" style="margin-top:10px;font-style:italic;color:var(--blue-strong)">"The despair you feel? That's just the wind knocked out of you. We aren't playing for a tie. We're playing for the win."</p>
+        <div class="pillar" style="margin-top:14px">
+          <div class="pillar-icon">✏️</div>
+          <div class="pillar-text"><h4>Your First Play</h4><p>Write down 3 skills you used weekly in your last role. Next to each, write 1 way AI could multiply it. That's your new position on the field.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="box-shadow:none;margin-bottom:14px">
+      <div class="card-inner">
+        <div class="card-label">Free Agent Runway Calculator</div>
+        <h2 class="card-title">Know your game clock</h2>
+        <p class="card-body">Fill this in. Don't guess. Don't hide the score. Clarity kills anxiety.</p>
+        <div style="margin:16px 0">
+          <label style="font-size:.83rem;font-weight:600;color:var(--text);display:block;margin-bottom:6px">Total Severance / Savings ($)</label>
+          <input type="number" id="rc-savings" placeholder="e.g. 25000" oninput="calcRunway()"
+            style="width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;font-size:1rem;font-family:'DM Sans',sans-serif;color:var(--text);outline:none;margin-bottom:12px">
+          <label style="font-size:.83rem;font-weight:600;color:var(--text);display:block;margin-bottom:6px">Monthly Essential Costs ($)</label>
+          <input type="number" id="rc-costs" placeholder="e.g. 4000" oninput="calcRunway()"
+            style="width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;font-size:1rem;font-family:'DM Sans',sans-serif;color:var(--text);outline:none">
+        </div>
+        <div id="rc-result" style="display:none;background:var(--blue-soft);border-radius:14px;padding:16px;text-align:center;margin-top:12px">
+          <div style="font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:900;color:var(--blue-strong)" id="rc-months"></div>
+          <div style="font-size:.85rem;color:var(--muted);margin-top:4px">months of game clock</div>
+          <div style="font-size:.82rem;color:var(--text);margin-top:10px;line-height:1.6" id="rc-advice"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="box-shadow:none;margin-bottom:14px">
+      <div class="card-inner">
+        <div class="card-label">Your 30-Day Game Plan</div>
+        <h2 class="card-title">4-week sprint to get back in the game</h2>
+        <div class="pillar">
+          <div class="pillar-icon">1️⃣</div>
+          <div class="pillar-text"><h4>Week 1 — Reset the Mindset</h4><p>Process the hit: journal, talk it out, close that chapter. Define your new positioning in one clear sentence. Stop checking your old work email. Read Pages 1–7 of this Playbook.</p></div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon">2️⃣</div>
+          <div class="pillar-text"><h4>Week 2 — Gear Up</h4><p>Choose your AI tools (ChatGPT, Claude, Gemini). Learn basic prompting. Automate one task you hate doing manually. Set up your workspace for daily reps.</p></div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon">3️⃣</div>
+          <div class="pillar-text"><h4>Week 3 — Build Proof</h4><p>Build one proof-of-work project (workflow redesign, case study, demo). Document the outcome: time saved, errors reduced, value created. Publish it. Get feedback from 2–3 trusted people.</p></div>
+        </div>
+        <div class="pillar" style="border-bottom:none">
+          <div class="pillar-icon">4️⃣</div>
+          <div class="pillar-text"><h4>Week 4 — Get Visible</h4><p>Post your proof-of-work on LinkedIn (3x this week). Send 15 cold DMs with proof attached. Update your résumé with AI-director positioning. Schedule 5 coffee chats or informational interviews.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="box-shadow:none;margin-bottom:14px">
+      <div class="card-inner">
+        <div class="card-label">Film Study Drill</div>
+        <h2 class="card-title">Think like the coach who hires</h2>
+        <p class="card-body">Pull 3 job descriptions in your field. Rewrite each role in one sentence: <strong>"This job exists to solve ____."</strong> Now you're thinking from the other side of the table.</p>
+        <div class="pillar" style="margin-top:14px">
+          <div class="pillar-icon">⚠️</div>
+          <div class="pillar-text"><h4>Defensive Read</h4><p>If your résumé describes tasks instead of outcomes, you look like a cost — not a weapon. Skill + leverage is the new currency. Show how you ship outcomes faster with modern tools.</p></div>
+        </div>
+        <div class="pillar" style="border-bottom:none">
+          <div class="pillar-icon">🔄</div>
+          <div class="pillar-text"><h4>Language Shift</h4><p><strong>Old:</strong> "I'm looking for a job."<br><strong>New:</strong> "I'm a Free Agent who solves X with Y." One is a plea. The other is a position.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="box-shadow:none;margin-bottom:14px">
+      <div class="card-inner">
+        <div class="card-label">Drill #1</div>
+        <h2 class="card-title">Find your AI tools</h2>
+        <p class="card-body">Open ChatGPT and type:</p>
+        <p class="card-body" style="background:var(--blue-soft);border-radius:10px;padding:14px;margin-top:10px;font-weight:600;color:var(--blue-strong)">"Act as my career coach. Based on my last role as [X], what are 5 AI tools or workflows that could 10x my daily tasks?"</p>
+        <p class="card-body" style="margin-top:10px">Use AI to think better — not to sound like a robot. Your edge is taste + judgment.</p>
+      </div>
+    </div>
+
+    <div class="card" style="box-shadow:none;margin-bottom:0">
+      <div class="card-inner">
+        <div class="card-label">Drill #2</div>
+        <h2 class="card-title">Build one workflow</h2>
+        <p class="card-body">Take the best tool from Drill #1 and apply the full prompt formula to a real recurring task you currently do manually:</p>
+        <p class="card-body" style="background:var(--blue-soft);border-radius:10px;padding:14px;margin-top:10px;font-weight:600;color:var(--blue-strong)">Role + Context + Goal + Standard + Format</p>
+        <p class="card-body" style="margin-top:10px">Run it. Save the output. Note what worked and what didn't. That's your first reusable workflow.</p>
+    </div>
+    </div>
+
+    <div class="card" style="box-shadow:none;margin-bottom:0">
+      <div class="card-inner">
+        <div class="card-label">Drill #3</div>
+        <h2 class="card-title">Document the result</h2>
+        <p class="card-body">Time saved. Quality difference. What you'd do differently. Write it in two sentences.</p>
+        <p class="card-body" style="margin-top:10px">This becomes the seed of your proof-of-work artifact — something you can show in an interview or publish on LinkedIn.</p>
+      </div>
+    </div>
+      </div>
+    </div>
+
+  </div><!-- end dd-content -->
+
+  <div class="section-footer">
+    <button class="btn-primary" onclick="goTo('m2')">Continue to BetterConnections →</button>
+  </div>
+</div>
+</div>
+
+<div class="screen" id="screen-m2">
+<div style="height:56px"></div>
+<div class="hero-band">
+  <div class="module-badge badge-blue">Module 3</div>
+  <div class="hero-num">03</div>
+  <h1 class="hero-title">Better<em>Connections</em></h1>
+  <p class="hero-sub">Understand your communication style — and how to connect with the four types of people you work with every day.</p>
+</div>
+
+<div class="wrap">
+
+  <div class="card">
+    <div class="card-inner">
+      <div class="card-label">Why This Matters</div>
+      <h2 class="card-title">Most workplace friction isn't about the work. It's about communication style.</h2>
+      <p class="card-body">Every person you work with — your manager, your team, a hiring manager — has a dominant style that shapes how they receive information, make decisions, and build trust. When you know their style, you stop guessing and start connecting.</p>
+    </div>
+  </div>
+
+  <!-- QUIZ CARD -->
+  <div class="card" id="bc-quiz-card">
+    <div class="card-inner">
+      <div class="card-label">Personality Quiz</div>
+      <h2 class="card-title">What's your communication style?</h2>
+      <p class="card-body" style="margin-bottom:18px">8 quick questions. No right or wrong answers. Find out if you're a Driver, Analytical, Expressive, or Amiable — and what that means for how you work.</p>
+      <div id="bc-quiz-start">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">
+          <div class="wellness-card focus-card" style="text-align:left;padding:14px 16px">
+            <div style="font-size:20px;margin-bottom:6px">🔴</div>
+            <h4 style="color:#dc2626">Driver</h4>
+            <p>Decisive. Direct. Results-focused.</p>
+          </div>
+          <div class="wellness-card calm-card" style="text-align:left;padding:14px 16px;background:linear-gradient(160deg,#eff6ff,#dbeafe)">
+            <div style="font-size:20px;margin-bottom:6px">🔵</div>
+            <h4 style="color:#2563eb">Analytical</h4>
+            <p>Thorough. Data-driven. Precise.</p>
+          </div>
+          <div class="wellness-card" style="text-align:left;padding:14px 16px;background:linear-gradient(160deg,#fdf4ff,#f3e8ff);border:1px solid var(--line)">
+            <div style="font-size:20px;margin-bottom:6px">🟣</div>
+            <h4 style="color:#7c3aed">Expressive</h4>
+            <p>Energetic. Inspiring. Big-picture.</p>
+          </div>
+          <div class="wellness-card" style="text-align:left;padding:14px 16px;background:linear-gradient(160deg,#f0fdf4,#dcfce7);border:1px solid var(--line)">
+            <div style="font-size:20px;margin-bottom:6px">🟢</div>
+            <h4 style="color:#16a34a">Amiable</h4>
+            <p>Supportive. Steady. People-first.</p>
+          </div>
+        </div>
+        <button class="btn-primary" onclick="bcStartQuiz()">Find My Style →</button>
+      </div>
+
+      <!-- Quiz active -->
+      <div id="bc-quiz-active" style="display:none">
+        <div class="quiz-progress" style="margin-bottom:16px">
+          <div class="quiz-progress-fill" id="bc-progress-fill" style="width:0%"></div>
+        </div>
+        <p style="font-size:.75rem;color:var(--muted);margin-bottom:14px" id="bc-q-counter">Question 1 of 8</p>
+        <h3 style="font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin-bottom:16px;line-height:1.35" id="bc-question"></h3>
+        <div id="bc-options"></div>
+      </div>
+
+      <!-- Quiz results -->
+      <div id="bc-quiz-results" style="display:none">
+        <div id="bc-result-bars" style="margin-bottom:18px"></div>
+        <div id="bc-result-profile"></div>
+        <button class="btn-primary" style="margin-top:16px" onclick="bcRestartQuiz()">Retake Quiz →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOT BUTTONS -->
+  <div class="dd-trigger" onclick="toggleDD(this)">
+    <div class="dd-left">
+      <div class="dd-icon">🔥</div>
+      <div class="dd-text">
+        <strong>Hot Buttons — What motivates each style</strong>
+        <span>Driver · Analytical · Expressive · Amiable</span>
+      </div>
+    </div>
+    <div class="dd-arrow">▼</div>
+  </div>
+  <div class="dd-content">
+    <div class="card" style="box-shadow:none;margin-bottom:14px">
+      <div class="card-inner">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+          <span style="background:#fee2e2;color:#dc2626;border-radius:8px;padding:6px 10px;font-size:.8rem;font-weight:700">🔴 Driver</span>
+        </div>
+        <div class="pillar"><div class="pillar-icon" style="background:#fee2e2;border-color:rgba(220,38,38,.2)">⚡</div><div class="pillar-text"><h4>Lead with outcomes</h4><p>Skip the backstory. Start with the result, the deadline, and the decision needed. Drivers want to know: what are we solving and when does it need to be done?</p></div></div>
+        <div class="pillar"><div class="pillar-icon" style="background:#fee2e2;border-color:rgba(220,38,38,.2)">🎯</div><div class="pillar-text"><h4>Respect their time</h4><p>Be concise. Give two clear options rather than open-ended questions. They'll decide fast — your job is to make the decision easy.</p></div></div>
+        <div class="pillar" style="border-bottom:none"><div class="pillar-icon" style="background:#fee2e2;border-color:rgba(220,38,38,.2)">🏆</div><div class="pillar-text"><h4>Show confidence</h4><p>Drivers respect people who own their position. Don't hedge or over-explain. Make your case and stand behind it.</p></div></div>
+      </div>
+    </div>
+    <div class="card" style="box-shadow:none;margin-bottom:14px">
+      <div class="card-inner">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+          <span style="background:#dbeafe;color:#2563eb;border-radius:8px;padding:6px 10px;font-size:.8rem;font-weight:700">🔵 Analytical</span>
+        </div>
+        <div class="pillar"><div class="pillar-icon" style="background:#dbeafe;border-color:rgba(37,99,235,.2)">📊</div><div class="pillar-text"><h4>Provide facts and data</h4><p>Analyticals don't trust claims without evidence. Back up your points with numbers, sources, or step-by-step logic. Vague assertions make them skeptical.</p></div></div>
+        <div class="pillar"><div class="pillar-icon" style="background:#dbeafe;border-color:rgba(37,99,235,.2)">🔍</div><div class="pillar-text"><h4>Explain the why</h4><p>They want to understand the reasoning, not just the conclusion. Walk them through your process — they'll trust the outcome more when they can follow the logic.</p></div></div>
+        <div class="pillar" style="border-bottom:none"><div class="pillar-icon" style="background:#dbeafe;border-color:rgba(37,99,235,.2)">⏳</div><div class="pillar-text"><h4>Give them time to think</h4><p>Don't pressure for an immediate answer. Analyticals make better decisions when they can process carefully. Follow up in writing so they can review.</p></div></div>
+      </div>
+    </div>
+    <div class="card" style="box-shadow:none;margin-bottom:14px">
+      <div class="card-inner">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+          <span style="background:#ede9fe;color:#7c3aed;border-radius:8px;padding:6px 10px;font-size:.8rem;font-weight:700">🟣 Expressive</span>
+        </div>
+        <div class="pillar"><div class="pillar-icon" style="background:#ede9fe;border-color:rgba(124,58,237,.2)">🎉</div><div class="pillar-text"><h4>Bring energy and stories</h4><p>Expressives connect through enthusiasm and narrative. Open with a story or an exciting vision before getting into the details. Energy is contagious to them.</p></div></div>
+        <div class="pillar"><div class="pillar-icon" style="background:#ede9fe;border-color:rgba(124,58,237,.2)">💡</div><div class="pillar-text"><h4>Make it social and fun</h4><p>They thrive when there's collaboration, laughter, and creativity in the room. Dry, transactional communication shuts them down. Make them feel part of something.</p></div></div>
+        <div class="pillar" style="border-bottom:none"><div class="pillar-icon" style="background:#ede9fe;border-color:rgba(124,58,237,.2)">🚀</div><div class="pillar-text"><h4>Paint the vision</h4><p>Show them the big picture before the details. Expressives are motivated by possibility and impact — give them the "what could be" before the "how."</p></div></div>
+      </div>
+    </div>
+    <div class="card" style="box-shadow:none;margin-bottom:0">
+      <div class="card-inner">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+          <span style="background:#dcfce7;color:#16a34a;border-radius:8px;padding:6px 10px;font-size:.8rem;font-weight:700">🟢 Amiable</span>
+        </div>
+        <div class="pillar"><div class="pillar-icon" style="background:#dcfce7;border-color:rgba(22,163,74,.2)">🤝</div><div class="pillar-text"><h4>Build trust first</h4><p>Amiables need to feel safe before they engage fully. Take a moment to connect personally before getting to business. Relationships come before transactions.</p></div></div>
+        <div class="pillar"><div class="pillar-icon" style="background:#dcfce7;border-color:rgba(22,163,74,.2)">👂</div><div class="pillar-text"><h4>Invite their input</h4><p>They often won't speak up unless asked. Create space for their perspective — "What do you think?" goes a long way. They have more to offer than they show.</p></div></div>
+        <div class="pillar" style="border-bottom:none"><div class="pillar-icon" style="background:#dcfce7;border-color:rgba(22,163,74,.2)">🕊️</div><div class="pillar-text"><h4>Keep the tone kind</h4><p>Blunt or aggressive communication shuts Amiables down immediately. They'll disengage rather than push back. Warmth isn't weakness — it's the key to the relationship.</p></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPATIBILITY -->
+  <div class="dd-trigger" onclick="toggleDD(this)">
+    <div class="dd-left">
+      <div class="dd-icon">🔗</div>
+      <div class="dd-text">
+        <strong>Compatibility — Who clicks, who clashes</strong>
+        <span>Best matches · Challenging pairs · Why it matters at work</span>
+      </div>
+    </div>
+    <div class="dd-arrow">▼</div>
+  </div>
+  <div class="dd-content">
+    <div class="card" style="box-shadow:none;margin-bottom:14px">
+      <div class="card-inner">
+        <p class="card-body" style="margin-bottom:16px">Understanding who you naturally click with — and who creates friction — gives you a real edge in interviews, team dynamics, and working with managers.</p>
+        <div class="pillar">
+          <div class="pillar-icon" style="background:#fee2e2;border-color:rgba(220,38,38,.2)">🔴</div>
+          <div class="pillar-text">
+            <h4>Driver — Best with: Amiable. Hard with: Expressive.</h4>
+            <p>Drivers and Amiables balance each other — the Driver provides direction, the Amiable provides harmony. Driver + Expressive clashes because both want the spotlight and neither wants to slow down for the other.</p>
+          </div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon" style="background:#dbeafe;border-color:rgba(37,99,235,.2)">🔵</div>
+          <div class="pillar-text">
+            <h4>Analytical — Best with: Driver. Hard with: Amiable.</h4>
+            <p>Analytical + Driver works because the Driver sets the direction and the Analytical builds the plan. Analytical + Amiable struggles because neither pushes decisions forward — both wait for the other to lead.</p>
+          </div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon" style="background:#ede9fe;border-color:rgba(124,58,237,.2)">🟣</div>
+          <div class="pillar-text">
+            <h4>Expressive — Best with: Amiable. Hard with: Analytical.</h4>
+            <p>Expressive + Amiable creates high warmth and energy. Expressive + Analytical grates — the Expressive finds the Analytical cold and slow; the Analytical finds the Expressive unfocused and loud.</p>
+          </div>
+        </div>
+        <div class="pillar" style="border-bottom:none">
+          <div class="pillar-icon" style="background:#dcfce7;border-color:rgba(22,163,74,.2)">🟢</div>
+          <div class="pillar-text">
+            <h4>Amiable — Best with: Expressive. Hard with: Driver.</h4>
+            <p>Amiable + Expressive bond easily over warmth and collaboration. Amiable + Driver is the hardest pair — the Driver's bluntness feels harsh to the Amiable; the Amiable's pace feels slow to the Driver.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="box-shadow:none">
+      <div class="card-inner">
+        <div class="card-label">Interview Application</div>
+        <h2 class="card-title" style="font-size:1.1rem">Reading your interviewer's style</h2>
+        <div class="pillar"><div class="pillar-text"><h4>Driver interviewer</h4><p>Gets to the point fast, asks about results and timelines. Match their pace. Keep answers concise — use numbers and outcomes. Don't ramble.</p></div></div>
+        <div class="pillar"><div class="pillar-text"><h4>Analytical interviewer</h4><p>Asks detailed process questions. Show your methodology. Walk through your thinking step by step. Have data ready.</p></div></div>
+        <div class="pillar"><div class="pillar-text"><h4>Expressive interviewer</h4><p>Warm and conversational, may go off-topic. Match their energy. Tell stories. Show enthusiasm for the role and the team.</p></div></div>
+        <div class="pillar" style="border-bottom:none"><div class="pillar-text"><h4>Amiable interviewer</h4><p>Focuses on team fit and how you work with others. Lead with collaboration and examples of supporting teammates. Avoid coming across as aggressive or dismissive of others.</p></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-footer">
+    <button class="btn-primary" onclick="goTo('m3')">Continue to AgentClarity →</button>
+  </div>
+</div>
+</div>
+
+<div class="screen" id="screen-m3">
+<div style="height:56px"></div>
+<div class="hero-band">
+  <div class="module-badge badge-blue">Module 4</div>
+  <div class="hero-num">04</div>
+  <h1 class="hero-title">Agent<em>Clarity</em></h1>
+  <p class="hero-sub">Move from basic prompting to structured thinking and repeatable AI-powered execution.</p>
+</div>
+
+<div class="wrap">
+  <div class="card">
+    <div class="card-inner">
+      <div class="card-label">The Core Shift</div>
+      <h2 class="card-title">Prompting → Clarity → Agents</h2>
+      <p class="card-body">Most professionals stop at prompting, and that is why results stay inconsistent. AgentClarity teaches you how to progress from task instructions to structured clarity, and ultimately to repeatable execution systems.</p>
+      <div class="stat-callout" style="margin-top:16px">
+        <div class="num" style="font-size:1.4rem">You are the coach. AI is the execution engine.</div>
+        <div class="lbl">Stop asking what to say to the AI. Start asking what it should accomplish.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-inner">
+      <div class="card-label">The Football Analogy</div>
+      <div class="pillar">
+        <div class="pillar-icon">🏈</div>
+        <div class="pillar-text"><h4>Prompting — coaching rookies</h4><p>You must explain every detail. Results are inconsistent. You are the bottleneck in every step.</p></div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">📋</div>
+        <div class="pillar-text"><h4>Clarity — calling plays to a trained team</h4><p>They understand the system. You define the outcome and constraints. Results improve dramatically.</p></div>
+      </div>
+      <div class="pillar" style="border-bottom:none">
+        <div class="pillar-icon">⭐</div>
+        <div class="pillar-text"><h4>Agents — veteran QBs</h4><p>You call the play, they adjust at the line and execute within your framework. You are the architect. Results compound.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dd-trigger" onclick="toggleDD(this)">
+    <div class="dd-left">
+      <div class="dd-icon">🤖</div>
+      <div class="dd-text">
+        <strong>Deeper Dive: Prompt → Clarity → Agent-Ready</strong>
+        <span>3 executive examples · Prompt formula · Guided practice</span>
+      </div>
+    </div>
+    <div class="dd-arrow">▼</div>
+  </div>
+  <div class="dd-content">
+
+    <div class="card" style="box-shadow:none;margin-bottom:14px">
+      <div class="card-inner">
+        <div class="card-label">Executive Example 1 — Report Summary</div>
+        <div class="pillar">
+          <div class="pillar-icon">1️⃣</div>
+          <div class="pillar-text"><h4>Prompt</h4><p>"Summarize this report."</p></div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon">2️⃣</div>
+          <div class="pillar-text"><h4>Clarity</h4><p>"Summarize this 12-page healthcare cost report into a 1-page executive brief focused on cost drivers, regulatory exposure, risk trends, and recommended board-level actions."</p></div>
+        </div>
+        <div class="pillar" style="border-bottom:none">
+          <div class="pillar-icon">3️⃣</div>
+          <div class="pillar-text"><h4>Agent-Ready</h4><p>"Create a reusable executive summary template for quarterly healthcare cost reports that automatically extracts top 3 cost drivers, regulatory risk exposure, variance trends, and recommended actions."</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="box-shadow:none;margin-bottom:14px">
+      <div class="card-inner">
+        <div class="card-label">Executive Example 2 — Job Search Strategy</div>
+        <div class="pillar">
+          <div class="pillar-icon">1️⃣</div>
+          <div class="pillar-text"><h4>Prompt</h4><p>"Improve my resume."</p></div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon">2️⃣</div>
+          <div class="pillar-text"><h4>Clarity</h4><p>"Rewrite my resume emphasizing measurable outcomes, AI leverage, and cost-saving initiatives for senior healthcare contract roles."</p></div>
+        </div>
+        <div class="pillar" style="border-bottom:none">
+          <div class="pillar-icon">3️⃣</div>
+          <div class="pillar-text"><h4>Agent-Ready</h4><p>"Create a reusable resume optimization framework that converts role descriptions into quantified, AI-leveraged achievement bullets tailored to healthcare contract leadership positions."</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="box-shadow:none;margin-bottom:14px">
+      <div class="card-inner">
+        <div class="card-label">Executive Example 3 — Meeting Prep</div>
+        <div class="pillar">
+          <div class="pillar-icon">1️⃣</div>
+          <div class="pillar-text"><h4>Prompt</h4><p>"Prepare me for this meeting."</p></div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon">2️⃣</div>
+          <div class="pillar-text"><h4>Clarity</h4><p>"Prepare a strategic briefing for a 30-minute executive meeting with a managed care VP, including likely objections, financial impact discussion points, and negotiation leverage."</p></div>
+        </div>
+        <div class="pillar" style="border-bottom:none">
+          <div class="pillar-icon">3️⃣</div>
+          <div class="pillar-text"><h4>Agent-Ready</h4><p>"Develop a repeatable executive meeting preparation checklist that analyzes stakeholder incentives, financial drivers, risk exposure, and objection handling strategies."</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="box-shadow:none;margin-bottom:14px">
+      <div class="card-inner">
+        <div class="card-label">Prompt Formula</div>
+        <h2 class="card-title" style="font-size:1.1rem">Role + Context + Goal + Standard + Format</h2>
+        <p class="card-body">The clearer your direction, the more useful the first draft becomes. This formula works for any AI tool — ChatGPT, Claude, Gemini.</p>
+        <div class="pillar">
+          <div class="pillar-text"><h4>Role</h4><p>Tell AI what expert to be. "Act as a senior healthcare contract manager..."</p></div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-text"><h4>Context</h4><p>What situation are you in? What constraints matter?</p></div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-text"><h4>Goal</h4><p>What specific outcome do you need?</p></div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-text"><h4>Standard</h4><p>What does excellent output look like? Define the quality bar before you start.</p></div>
+        </div>
+        <div class="pillar" style="border-bottom:none">
+          <div class="pillar-text"><h4>Format</h4><p>How should the output be delivered? Bullets, table, email, one-pager?</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="box-shadow:none;margin-bottom:0;background:var(--blue-soft);border-color:rgba(30,115,216,.2)">
+      <div class="card-inner">
+        <div class="card-label">Guided Practice</div>
+        <h2 class="card-title" style="font-size:1.1rem">Build your own progression</h2>
+        <p class="card-body" style="margin-bottom:12px"><strong>Step 1:</strong> Write a basic prompt you commonly use.</p>
+        <textarea id="ac-step1" placeholder="Example: Help me write a proposal..." rows="2"
+          style="width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:.9rem;color:var(--text);resize:vertical;outline:none;background:white"></textarea>
+        <p class="card-body" style="margin:12px 0"><strong>Step 2:</strong> Rewrite it with defined outcome, constraints, and audience.</p>
+        <textarea id="ac-step2" placeholder="Define the outcome, constraints, and decision-maker..." rows="3"
+          style="width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:.9rem;color:var(--text);resize:vertical;outline:none;background:white"></textarea>
+        <p class="card-body" style="margin:12px 0"><strong>Step 3:</strong> Convert it into a repeatable system or template.</p>
+        <textarea id="ac-step3" placeholder="How would this become a reusable framework or checklist?" rows="3"
+          style="width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:.9rem;color:var(--text);resize:vertical;outline:none;background:white"></textarea>
+        <p class="card-body" style="margin-top:14px;font-style:italic">The goal is not longer prompts. The goal is structured thinking that produces repeatable results.</p>
+      </div>
+    </div>
+
+  </div><!-- end dd-content -->
+
+  <div class="section-footer">
+    <button class="btn-primary" onclick="goTo('command')">Continue to Command Center →</button>
+  </div>
+</div>
+</div>
+
+<div class="screen" id="screen-command">
+<div style="height:56px"></div>
+<div class="hero-band">
+  <div class="module-badge badge-blue">Command Center</div>
+  <div class="hero-num">05</div>
+  <h1 class="hero-title">Your Competitive <em>Edge</em></h1>
+  <p class="hero-sub">From prompting to orchestration. The professionals winning in the AI era aren't the most enthusiastic about the technology — they're the ones translating capability into measurable results.</p>
+</div>
+
+<div class="wrap">
+
+  <div class="card">
+    <div class="card-inner">
+      <div class="card-label">The Four Levels</div>
+      <h2 class="card-title">Where are you today?</h2>
+      <p class="card-body" style="margin-bottom:16px">Most of your peers are at Level 1 or 2. Reaching Level 4 is not difficult — it is simply deliberate. And the window to get there before your peers is narrow and closing fast.</p>
+      <div class="pillar">
+        <div class="pillar-icon">1️⃣</div>
+        <div class="pillar-text"><h4>The Guesser</h4><p>Vague requests. Vague results. Uses AI occasionally, abandons it when it disappoints. Blames the tool.</p></div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">2️⃣</div>
+        <div class="pillar-text"><h4>The User</h4><p>Has learned a handful of go-to prompts. Gets adequate results on familiar tasks. Doesn't understand why some prompts work and others don't.</p></div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">3️⃣</div>
+        <div class="pillar-text"><h4>The Craftsman</h4><p>Understands structure: Role, Task, Context, Format. Iterates deliberately. Saves what works. Builds a prompt library that compounds over time.</p></div>
+      </div>
+      <div class="pillar" style="border-bottom:none">
+        <div class="pillar-icon">4️⃣</div>
+        <div class="pillar-text"><h4>The Director</h4><p>Assigns AI a persona, a mission, constraints, and a quality standard. Treats AI as a capable subordinate. Reviews output strategically. This is where results become exceptional.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dd-trigger" onclick="toggleDD(this)">
+    <div class="dd-left">
+      <div class="dd-icon">🕹️</div>
+      <div class="dd-text">
+        <strong>Deeper Dive: Orchestration, Your Synthetic Team & The Horizon</strong>
+        <span>4 agent roles · 2/5/10-year outlook · Competitive Edge formula</span>
+      </div>
+    </div>
+    <div class="dd-arrow">▼</div>
+  </div>
+  <div class="dd-content">
+
+    <div class="card" style="box-shadow:none;margin-bottom:14px">
+      <div class="card-inner">
+        <div class="card-label">Your Synthetic Team</div>
+        <h2 class="card-title">Four agents. One mission.</h2>
+        <p class="card-body">In the AI era, your team doesn't require hiring, onboarding, or headcount approval. It requires clear role definition, precise mission assignment, and strategic review.</p>
+        <div class="pillar">
+          <div class="pillar-icon">🔍</div>
+          <div class="pillar-text"><h4>The Researcher</h4><p>Gathers intelligence, synthesizes sources, identifies gaps, and surfaces insights you didn't know to look for.</p></div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon">📊</div>
+          <div class="pillar-text"><h4>The Analyst</h4><p>Evaluates data, identifies patterns, challenges assumptions, and builds the case for your recommendation.</p></div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon">✍️</div>
+          <div class="pillar-text"><h4>The Writer</h4><p>Transforms analysis into polished communication — reports, proposals, presentations, executive summaries.</p></div>
+        </div>
+        <div class="pillar" style="border-bottom:none">
+          <div class="pillar-icon">⚡</div>
+          <div class="pillar-text"><h4>The Critic</h4><p>Stress-tests the work. Finds weaknesses. Argues the counter-case. Ensures your output is bulletproof before it goes out.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="box-shadow:none;margin-bottom:14px">
+      <div class="card-inner">
+        <div class="card-label">The Orchestration Framework</div>
+        <h2 class="card-title">4 steps to mission-level results</h2>
+        <div class="pillar">
+          <div class="pillar-icon">🎯</div>
+          <div class="pillar-text"><h4>1 — Define Mission</h4><p>What is the precise outcome? Specificity here determines everything that follows.</p></div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon">👥</div>
+          <div class="pillar-text"><h4>2 — Assign Roles</h4><p>Which agent does what? Define each agent's specific function and scope.</p></div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon">📏</div>
+          <div class="pillar-text"><h4>3 — Set Standard</h4><p>Define excellent output before you start. The quality bar must be explicit.</p></div>
+        </div>
+        <div class="pillar" style="border-bottom:none">
+          <div class="pillar-icon">🔄</div>
+          <div class="pillar-text"><h4>4 — Review & Redirect</h4><p>Evaluate strategically. Improve the system — not just the individual output. Every substandard result is system data.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="box-shadow:none;margin-bottom:14px">
+      <div class="card-inner">
+        <div class="card-label">The Horizon</div>
+        <h2 class="card-title">Where this is going — and what it means for you</h2>
+        <div class="pillar">
+          <div class="pillar-icon">📅</div>
+          <div class="pillar-text"><h4>Now — 2026: Human in the Loop</h4><p>You assign tasks, review every output. Agents work within defined workflows. Orchestration skills are the differentiator. This is where this app puts you today.</p></div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon">📅</div>
+          <div class="pillar-text"><h4>6–18 Months: Supervised Autonomy</h4><p>Agents execute multi-step workflows independently. You review outputs, not individual steps. Mission-setting becomes your primary value.</p></div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon">📅</div>
+          <div class="pillar-text"><h4>2–5 Years: Systems Advantage</h4><p>Workflow architects in high demand. AI manages AI in enterprise settings. System designers outperform individual contributors. The gap between AI-enabled and non-AI workers widens every quarter.</p></div>
+        </div>
+        <div class="pillar" style="border-bottom:none">
+          <div class="pillar-icon">📅</div>
+          <div class="pillar-text"><h4>5–10 Years: Architecture Advantage</h4><p>The irreducibles become premium: judgment in ambiguity, genuine empathy, trust relationships, ethical reasoning, creative vision. These grow more valuable as AI handles more execution — not less.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="box-shadow:none;background:var(--blue-soft);border-color:rgba(30,115,216,.2)">
+      <div class="card-inner">
+        <div class="card-label">Your Competitive Edge Statement</div>
+        <h2 class="card-title" style="font-size:1.1rem">Write this. Mean it. Use it.</h2>
+        <p class="card-body" style="background:white;border-radius:12px;padding:14px;font-weight:600;color:var(--blue-strong);margin-bottom:14px">"I use AI orchestration to deliver exceptional results — faster, at higher quality, and at greater scale than any professional working without these capabilities."</p>
+        <p class="card-body">Make it specific to your role, your organization, your results. The workers delivering results through AI right now are not just keeping up — they are getting ahead. The skills you build here compound every week you use them.</p>
+        <div style="margin-top:16px">
+          <p style="font-size:.83rem;font-weight:600;color:var(--text);margin-bottom:8px">Your version:</p>
+          <textarea placeholder="I use AI to deliver __ for __ by __..." rows="3"
+            style="width:100%;padding:12px 14px;border:1.5px solid rgba(30,115,216,.3);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:.9rem;color:var(--text);resize:vertical;outline:none;background:white"></textarea>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end dd-content -->
+
+  <div class="card" style="margin-top:18px">
+    <div class="card-inner">
+      <div class="card-label">Q&A</div>
+      <div class="pillar">
+        <div class="pillar-icon">❓</div>
+        <div class="pillar-text"><h4>Why pay if I already have free AI tools?</h4><p>Because this system gives you a complete, staged approach — the right sequence, proven frameworks and scripts, and integrated tools across strategy, personal performance, communication, and AI execution.</p></div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">🧭</div>
+        <div class="pillar-text"><h4>What if I was laid off recently?</h4><p>Use the flow in order. Start with BetterYou, then move to the Playbook, BetterConnections, and AgentClarity.</p></div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">⚡</div>
+        <div class="pillar-text"><h4>What if I am still employed but worried?</h4><p>Act early. Build proof-of-work, sharpen communication, and move your role toward measurable outcomes with AI support.</p></div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">🤖</div>
+        <div class="pillar-text"><h4>How should I talk about AI in interviews?</h4><p>Focus on results, speed, and quality improvements you can deliver with AI. Keep examples concrete and measurable.</p></div>
+      </div>
+      <div class="pillar" style="border-bottom:none">
+        <div class="pillar-icon">📊</div>
+        <div class="pillar-text"><h4>What do you mean by results?</h4><p>Real workplace outcomes: getting interviews, getting hired, keeping your role during change, improving communication, and delivering faster, higher-quality work with measurable impact.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-footer">
+    <button class="btn-primary" onclick="goTo('wrapup')">Complete the Experience →</button>
+  </div>
+</div>
+</div>
+
+<div class="screen" id="screen-wrapup">
+<div class="wrapup-screen">
+<div style="height:56px"></div>
+<div class="wrapup-hero">
+  <div class="wrapup-badge">✓ Experience Complete</div>
+  <h1 class="wrapup-headline">You now know things<br>most workers <em>still don't.</em></h1>
+  <p class="wrapup-sub">Here's what you walked through — and what it means for what you do next.</p>
+</div>
+
+<div class="wrap">
+  <div class="card">
+    <div class="card-inner">
+      <div class="card-label">What You Covered</div>
+      <div class="module-recap">
+        <div class="recap-card">
+          <div class="recap-icon">🧠</div>
+          <div class="recap-title">BetterYou</div>
+          <p class="recap-takeaway">You identified your growth priority — Focus or Calm — and the five principles that carry you through what's ahead.</p>
+        </div>
+        <div class="recap-card">
+          <div class="recap-icon">📋</div>
+          <div class="recap-title">The Playbook</div>
+          <p class="recap-takeaway">You learned the three shifts reshaping the field: the AI Blitz, the Invisible Roster, and the Value Shift from tasks to results.</p>
+        </div>
+        <div class="recap-card">
+          <div class="recap-icon">🤝</div>
+          <div class="recap-title">BetterConnections</div>
+          <p class="recap-takeaway">You saw how communication style shapes outcomes in high-stakes moments — and how to adjust for the people who make decisions.</p>
+        </div>
+        <div class="recap-card">
+          <div class="recap-icon">🤖</div>
+          <div class="recap-title">AgentClarity</div>
+          <p class="recap-takeaway">You got the prompt formula and workflow system that turns AI from a novelty into a repeatable execution edge.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-inner">
+      <div class="card-label">The Shift You Now Understand</div>
+      <h2 class="card-title">From tasks to results. From reactive to directed. From worried to ready.</h2>
+      <p class="card-body">The workplace changed faster than most workers were warned. AI didn't just automate tasks — it rewrote what employers reward, how value is measured, and what separates people who get ahead from people who get left behind.</p>
+      <p class="card-body" style="margin-top:12px">You've seen the map. Now the work begins.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-inner">
+      <div class="card-label">Your Next Three Moves</div>
+      <div class="next-steps">
+        <div class="next-step">
+          <div class="ns-num">1</div>
+          <div class="ns-text">
+            <h4>Do the Runway Calculator</h4>
+            <p>Open the Playbook's Deeper Dive. Fill in the numbers honestly. Know exactly how much game clock you have — then build your plan around it.</p>
+          </div>
+        </div>
+        <div class="next-step">
+          <div class="ns-num">2</div>
+          <div class="ns-text">
+            <h4>Ship one proof-of-work artifact this week</h4>
+            <p>A workflow redesign, a case study, a demo — something that shows outcomes, not just skills. Publish it. Get feedback. That's your first new credential in the AI era.</p>
+          </div>
+        </div>
+        <div class="next-step">
+          <div class="ns-num">3</div>
+          <div class="ns-text">
+            <h4>Run the AgentClarity prompt formula once today</h4>
+            <p>Pick one task you do repeatedly. Apply Role + Context + Goal + Standard + Format. See what comes back. That's the start of your AI execution system.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrapup-final">
+    <p>"The only real constant in life is change.<br>The workers who win are the ones who got ready first."</p>
+    <span>You just got ready. Keep going.</span>
+  </div>
+
+  <div class="section-footer">
+    <button class="btn-primary" onclick="goTo('m0')">Review the Experience Again →</button>
+    <button class="btn-ghost" onclick="goTo('splash')">Back to Start</button>
+  </div>
+
+  <div class="app-footer">
+    <p class="disclaimer">This experience is for educational purposes only and does not constitute medical, psychological, or financial advice.</p>
+  </div>
+</div>
+</div>
+</div>
+
+<script>
+
+// ── BetterConnections Quiz ──────────────────────────────
+const BC_Q = [
+  {q:"A meeting is going nowhere. Your move:",a:["Call the decision and move on","Ask for more data first","Energize the room with ideas","Make sure everyone's heard"]},
+  {q:"Your manager needs a project update. You:",a:["Send bullets: status, blockers, next steps","Send a detailed breakdown with data","Call them — it's faster and more fun","Check in personally and ask what they need most"]},
+  {q:"A teammate disagrees with your approach. You:",a:["Make your case directly and move forward","Walk through the logic and evidence","Find common ground through conversation","Listen fully before responding"]},
+  {q:"How do you prefer to receive feedback?",a:["Straight and fast — just tell me","With specifics and examples","In a conversation, not a memo","Privately, with care for the relationship"]},
+  {q:"You're onboarding at a new job. First week priority:",a:["Understand the goals and decision-making","Learn the systems and how things work","Meet everyone and build relationships fast","Observe, listen, and earn trust gradually"]},
+  {q:"You're preparing for an important interview. You:",a:["Rehearse your key results and metrics","Research the company thoroughly","Psych yourself up and plan to connect","Prepare thoughtful questions about the team"]},
+  {q:"A project deadline is at risk. You:",a:["Triage immediately — cut scope, ship what matters","Analyze what went wrong and model options","Rally the team and find a creative path","Keep everyone calm and focused"]},
+  {q:"Your best message format at work:",a:["Bullets with clear actions","Step-by-step with context","A short story with a hook","Warm and personal"]}
+];
+const BC_TYPES = ['Driver','Analytical','Expressive','Amiable'];
+const BC_PROFILES = {
+  Driver:{
+    color:'#dc2626', bg:'#fee2e2', emoji:'🔴',
+    strengths:'Decisive • Owns outcomes • Gets things done',
+    watchouts:'Can be impatient • May come across as blunt',
+    summary:'You move fast and think in outcomes. You make decisions confidently and expect others to keep up. Your edge in the AI era: you direct systems and drive results without needing permission.',
+    tip:'Slow down just enough to bring your team along. The best Drivers know when to push and when to listen.'
+  },
+  Analytical:{
+    color:'#2563eb', bg:'#dbeafe', emoji:'🔵',
+    strengths:'Thorough • Data-driven • Precise',
+    watchouts:'Can overthink • Decisions may take longer',
+    summary:'You think in systems and facts. You ask the right questions and build plans that hold up under scrutiny. Your edge: you verify before you act — and in an AI-driven workplace, that judgment is rare.',
+    tip:'Practice making decisions with 80% of the data you want. Perfect information rarely arrives on time.'
+  },
+  Expressive:{
+    color:'#7c3aed', bg:'#ede9fe', emoji:'🟣',
+    strengths:'Inspires • Big-picture thinker • High energy',
+    watchouts:'Can overpromise • May lose focus on details',
+    summary:'You see the vision before anyone else and can bring people along for the ride. Your edge: in a world of AI-generated content, human energy and storytelling still cut through.',
+    tip:'Pair your vision with one concrete next step. Inspiration without execution loses rooms over time.'
+  },
+  Amiable:{
+    color:'#16a34a', bg:'#dcfce7', emoji:'🟢',
+    strengths:'Supportive • Calming • Builds real trust',
+    watchouts:'May avoid necessary conflict • Can be indecisive under pressure',
+    summary:'You build the relationships that hold teams together. Your edge: trust and collaboration are the glue of every high-functioning team — and you create both naturally.',
+    tip:'Practice voicing your opinion before you are fully ready. Your perspective matters more than you show.'
+  }
+};
+
+let bcScores = {Driver:0,Analytical:0,Expressive:0,Amiable:0};
+let bcIdx = 0;
+
+function bcStartQuiz(){
+  bcScores = {Driver:0,Analytical:0,Expressive:0,Amiable:0};
+  bcIdx = 0;
+  document.getElementById('bc-quiz-start').style.display='none';
+  document.getElementById('bc-quiz-results').style.display='none';
+  document.getElementById('bc-quiz-active').style.display='block';
+  bcRenderQ();
+}
+
+function bcRenderQ(){
+  const q = BC_Q[bcIdx];
+  document.getElementById('bc-q-counter').textContent = 'Question '+(bcIdx+1)+' of '+BC_Q.length;
+  document.getElementById('bc-progress-fill').style.width = ((bcIdx/BC_Q.length)*100)+'%';
+  document.getElementById('bc-question').textContent = q.q;
+  const box = document.getElementById('bc-options');
+  box.innerHTML = '';
+  q.a.forEach((opt,i) => {
+    const b = document.createElement('button');
+    b.className = 'quiz-option';
+    b.textContent = opt;
+    b.onclick = () => {
+      box.querySelectorAll('.quiz-option').forEach(x=>x.classList.remove('selected'));
+      b.classList.add('selected');
+      setTimeout(()=>bcAdvance(i), 600);
+    };
+    box.appendChild(b);
+  });
+}
+
+function bcAdvance(i){
+  bcScores[BC_TYPES[i]]++;
+  bcIdx++;
+  if(bcIdx < BC_Q.length){
+    bcRenderQ();
+  } else {
+    bcShowResults();
+  }
+}
+
+function bcShowResults(){
+  document.getElementById('bc-quiz-active').style.display='none';
+  document.getElementById('bc-quiz-results').style.display='block';
+  document.getElementById('bc-progress-fill').style.width='100%';
+
+  const total = BC_Q.length;
+  const top = Object.keys(bcScores).reduce((a,b)=>bcScores[a]>bcScores[b]?a:b);
+  const p = BC_PROFILES[top];
+
+  // Score bars
+  let barsHtml = '<div style="margin-bottom:16px">';
+  BC_TYPES.forEach(t => {
+    const pct = Math.round(bcScores[t]/total*100);
+    const prof = BC_PROFILES[t];
+    barsHtml += `<div style="display:grid;grid-template-columns:110px 1fr 44px;gap:8px;align-items:center;margin-bottom:10px;font-size:.82rem">
+      <div style="font-weight:600;color:${prof.color}">${prof.emoji} ${t}</div>
+      <div style="height:10px;border-radius:5px;background:#f1f4ff;overflow:hidden"><div style="height:100%;width:${pct}%;background:${prof.color};border-radius:5px;transition:width .5s"></div></div>
+      <div style="text-align:right;font-weight:700;color:${prof.color}">${pct}%</div>
+    </div>`;
+  });
+  barsHtml += '</div>';
+  document.getElementById('bc-result-bars').innerHTML = barsHtml;
+
+  // Profile card
+  document.getElementById('bc-result-profile').innerHTML = `
+    <div style="background:${p.bg};border-radius:16px;padding:20px;border:1px solid ${p.color}22">
+      <div style="font-size:28px;margin-bottom:8px">${p.emoji}</div>
+      <h3 style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:${p.color};margin-bottom:6px">Your style: ${top}</h3>
+      <p style="font-size:.88rem;color:var(--muted);line-height:1.65;margin-bottom:12px">${p.summary}</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+        <span style="background:white;border:1px solid ${p.color}44;border-radius:8px;padding:5px 10px;font-size:.78rem;font-weight:600;color:${p.color}">✓ ${p.strengths}</span>
+      </div>
+      <div style="background:white;border-radius:10px;padding:12px 14px;border-left:3px solid ${p.color}">
+        <p style="font-size:.83rem;color:var(--text);font-weight:600;margin:0 0 3px">Your coaching tip:</p>
+        <p style="font-size:.83rem;color:var(--muted);margin:0;line-height:1.6">${p.tip}</p>
+      </div>
+    </div>`;
+}
+
+function bcRestartQuiz(){
+  document.getElementById('bc-quiz-results').style.display='none';
+  document.getElementById('bc-quiz-start').style.display='block';
+}
+// ── End BetterConnections Quiz ──────────────────────────
+let PAYWALL_ON = false;
+
+const MODULE_ORDER = ['m0','m1','m2','m3','command','wrapup'];
+const MODULE_PROGRESS = {
+  intro: 0,
+  m0: 20,
+  paywall: 20,
+  m1: 40,
+  m2: 60,
+  m3: 80,
+  command: 95,
+  wrapup: 100
+};
+
+function handlePaywall() {
+  if (PAYWALL_ON) {
+    window.open('https://clarityapp1.gumroad.com/l/adaptandwin','_blank');
+  } else {
+    goTo('m1');
+  }
+}
+
+let S={
+  name:"",
+  qIdx:0,
+  quizScores:{focus:0,calm:0},
+};
+
+const Q=[
+  {q:"When a project gets boring or technical, I...",a:[{t:"Find a way to automate or skip it",s:"focus"},{t:"Worry I'll miss a critical detail",s:"calm"}]},
+  {q:"My biggest 'time leak' is...",a:[{t:"Chasing new, shiny ideas",s:"focus"},{t:"Over-perfecting what's already done",s:"calm"}]},
+  {q:"Under high pressure, my brain...",a:[{t:"Jumps to ten different solutions at once",s:"focus"},{t:"Freezes or loops on the 'what-ifs'",s:"calm"}]},
+  {q:"I feel most productive when I'm...",a:[{t:"Starting something brand new",s:"focus"},{t:"Checking off a long, certain list",s:"calm"}]},
+  {q:"If I have 2 hours of deep work, I...",a:[{t:"Distract myself every 15 minutes",s:"focus"},{t:"Spend 1 hour preparing to start",s:"calm"}]}
+];
+
+function updateChrome(id){
+  const topNav = document.getElementById('topNav');
+  const moduleNav = document.getElementById('moduleNav');
+  const fill = document.getElementById('progressFill');
+  const dots = document.querySelectorAll('.nav-dot');
+  const tabs = document.querySelectorAll('.module-tab[data-screen]');
+  const showChrome = ['m0','paywall','m1','m2','m3','command','wrapup'].includes(id);
+
+  topNav.style.display = showChrome ? 'flex' : 'none';
+  moduleNav.style.display = showChrome ? 'flex' : 'none';
+  fill.style.width = (MODULE_PROGRESS[id] || 0) + '%';
+
+  const stepIndexMap = { m0: 0, paywall: 0, m1: 1, m2: 2, m3: 3, command: 4, wrapup: 4 };
+  const currentStep = stepIndexMap[id];
+
+  dots.forEach((dot, index) => {
+    dot.className = 'nav-dot';
+    if (currentStep === undefined) {
+      dot.classList.add('locked');
+    } else if (index < currentStep) {
+      dot.classList.add('done');
+    } else if (index === currentStep) {
+      dot.classList.add('active');
+    } else {
+      dot.classList.add('locked');
+    }
+  });
+
+  tabs.forEach(tab => {
+    const screen = tab.dataset.screen;
+    const targetIndex = MODULE_ORDER.indexOf(screen);
+    const activeIndex = MODULE_ORDER.indexOf(id === 'paywall' ? 'm0' : id);
+    tab.classList.remove('active','done','available','locked');
+    if (targetIndex === 0) {
+      tab.classList.add(activeIndex === 0 ? 'active' : 'done');
+    } else if (PAYWALL_ON && ['m1','m2','m3','command'].includes(screen) && id !== screen) {
+      tab.classList.add('locked');
+    } else if (activeIndex > targetIndex) {
+      tab.classList.add('done');
+    } else if (activeIndex === targetIndex) {
+      tab.classList.add('active');
+    } else {
+      tab.classList.add('available');
+    }
+  });
+}
+
+function goTo(id){
+  const target = document.getElementById('screen-'+id);
+  if(!target){
+    console.warn('Missing screen:', id);
+    return;
+  }
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  target.classList.add('active');
+  updateChrome(id);
+  window.scrollTo(0,0);
+}
+
+function submitName(skip=false){
+  const val=document.getElementById('userNameInput').value.trim();
+  S.name=skip?"Friend":val;
+  goTo('intro');
+}
+
+function toggleDD(el){
+  el.classList.toggle('open');
+  el.nextElementSibling.classList.toggle('open');
+}
+
+function startQuiz(){
+  document.getElementById('quiz-welcome').style.display='none';
+  document.getElementById('quiz-active').style.display='block';
+  showQ();
+}
+
+function showQ(){
+  const q=Q[S.qIdx];
+  let h=`<h4 style="margin-bottom:16px;font-size:1.1rem">${q.q}</h4>`;
+  q.a.forEach((ans,i)=>{
+    h+=`<button class="quiz-option" onclick="selectAns(${i})">${ans.t}</button>`;
+  });
+  document.getElementById('quizQuestion').innerHTML=h;
+  document.getElementById('quizProgressFill').style.width=((S.qIdx+1)/Q.length*100)+"%";
+  document.getElementById('quizNextBtn').disabled=true;
+}
+
+function selectAns(idx){
+  document.querySelectorAll('.quiz-option').forEach(b=>b.classList.remove('selected'));
+  document.querySelectorAll('.quiz-option')[idx].classList.add('selected');
+  S.lastScore=Q[S.qIdx].a[idx].s;
+  document.getElementById('quizNextBtn').disabled=false;
+}
+
+function nextQ(){
+  S.quizScores[S.lastScore]++;
+  S.qIdx++;
+  if(S.qIdx<Q.length) showQ(); else showResults();
+}
+
+function showResults(){
+  document.getElementById('quiz-active').style.display='none';
+  document.getElementById('quiz-results').style.display='block';
+  const total=Q.length;
+  const fp=Math.round(S.quizScores.focus/total*100);
+  const cp=Math.round(S.quizScores.calm/total*100);
+  setTimeout(()=>{
+    document.getElementById('focusBar').style.height=fp+"%";
+    document.getElementById('focusPct').textContent=fp+"%";
+    document.getElementById('calmBar').style.height=cp+"%";
+    document.getElementById('calmPct').textContent=cp+"%";
+  },100);
+  const isFocus=S.quizScores.focus>=S.quizScores.calm;
+  document.getElementById('quizResultTitle').textContent='Your Priority: Better'+(isFocus?'Focus':'Calm');
+  document.getElementById('quizResultSub').textContent=isFocus?'Your patterns suggest the strongest opportunity is in sharpening your focus system.':'Your patterns suggest the strongest opportunity is in building steadier calm under pressure.';
+  document.getElementById('quizResultDetail').innerHTML='<div class="wellness-card '+(isFocus?'focus-card':'calm-card')+'" style="margin-top:0"><div class="wc-icon">'+(isFocus?'🧠':'🧘')+'</div><h4>Better'+(isFocus?'Focus':'Calm')+'</h4><p>'+(isFocus?'The key is building systems that carry you through the mundane middle — the part where most people lose the thread.':'The work is breaking the cognitive loop before it disrupts decisions or forward motion.')+'</p></div>';
+}
+
+document.querySelectorAll('.module-tab[data-screen]').forEach(tab => {
+  tab.addEventListener('click', () => {
+    if (tab.classList.contains('locked')) return;
+    goTo(tab.dataset.screen);
+  });
+});
+
+const paywallInstruction = document.getElementById('paywallInstruction');
+if (paywallInstruction) {
+  paywallInstruction.style.display = PAYWALL_ON ? 'block' : 'none';
+}
+
+updateChrome('splash');
+
+// ── BetterYou Quiz (10 questions) ──────────────────────────────
+const BY_Q = [
+  {text:"When your day feels scattered, you are most likely to:",opts:["Start several things at once.","Push through one task quickly and move on.","Pause to sort out the details before acting.","Look for a lighter or easier task first."],scores:{focus:[4,2,3,1],calm:[1,0,2,3]}},
+  {text:"Your natural state when starting a big project is:",opts:["Excited by the novelty, but easily distracted by new ideas.","Highly focused, working for long periods without interruption.","Driven by the end goal, focusing on efficiency.","Concerned about structure and getting the planning phase right."],scores:{focus:[4,2,1,3],calm:[0,0,0,0]}},
+  {text:"In moments of high stress, your first reaction is to:",opts:["Mentally review every step that led to the stressor.","Physically feel a sense of dread or 'freezing' up.","Avoid the situation or postpone dealing with it.","Write down a to-do list to gain control."],scores:{focus:[0,0,0,0],calm:[4,1,2,3]}},
+  {text:"When you are trying to get back on track, what usually helps most?",opts:["A clear list with a logical order.","A fast start with visible momentum.","More time to think before acting.","A simpler version of the task."],scores:{focus:[1,4,0,2],calm:[1,0,4,3]}},
+  {text:"When completing an uninteresting task, you often:",opts:["Take frequent breaks to scroll or check other things.","Procrastinate until the last possible minute.","Hyperfocus and block out the world until it's done.","Feel overwhelmed by the complexity or planning required."],scores:{focus:[4,1,2,3],calm:[1,3,1,2]}},
+  {text:"When you have too much on your mind, you typically find relief by:",opts:["Immediately starting a new activity or project.","Reviewing past events to find a flaw in logic.","Writing your thoughts down to clear mental clutter.","Physically moving (walking, running) to discharge energy."],scores:{focus:[2,1,1,0],calm:[1,4,2,3]}},
+  {text:"You feel most productive when your environment is:",opts:["Highly structured with a rigid schedule.","Spontaneous and you can jump between tasks.","You have a clear, exciting vision of the final result.","Quiet and low-pressure so your mind can settle."],scores:{focus:[3,4,1,2],calm:[1,0,1,4]}},
+  {text:"When starting something new, your primary goal is to:",opts:["Create momentum quickly so you do not stall out.","Think through the best approach before moving.","Build excitement around the end result.","Keep the task small enough that it feels manageable."],scores:{focus:[4,3,2,1],calm:[0,1,0,3]}},
+  {text:"After making a mistake at work, you spend most of your time:",opts:["Mentally re-analyzing the mistake over and over.","Distracting yourself and avoiding the task entirely.","Immediately taking action to fix the consequence.","Blaming external factors to minimize personal guilt."],scores:{focus:[1,0,4,2],calm:[4,3,0,1]}},
+  {text:"Which statement best describes your experience with planning?",opts:["I prefer flexible, evolving plans to rigid ones.","I usually stick to the plan, but only if it's logically sound.","My plans are detailed, but I often fail to execute them.","I find structure calming, even if the execution is messy."],scores:{focus:[4,2,1,3],calm:[0,1,3,2]}}
+];
+const BY_FOCUS_PROFILE={title:'Your Priority: BetterFocus',emoji:'🧠',color:'#1d4ed8',bg:'#eff6ff',summary:"Your patterns suggest the strongest opportunity is in sharpening your execution system. Your challenge isn't ability — it's consistency.",styles:[{name:'Creative Sprinter',strength:'High novelty focus',weakness:'Impulse control, finishing tasks',fit:'Designer, Entrepreneur'},{name:'Deep Diver',strength:'Hyper-focus, detail-oriented',weakness:'Task switching, time blindness',fit:'Researcher, Engineer'},{name:'Idea Generator',strength:'Innovation, big picture',weakness:'Organization, prioritization',fit:'Writer, Consultant'}],tools:[{name:'One Focus Sprint',desc:'Pick one task. Set a 25-minute timer. Do nothing else. Reset and repeat.'},{name:'Visible Commitment',desc:'Write your top 3 tasks on paper before opening your phone or email.'},{name:'Finish Line Rule',desc:'Define what "done" looks like before you start. Specificity creates closure.'}],reminder:'Try one short focus sprint today, then reset and repeat if it helps.',ref:'Reference: CHADD National Resource Center on ADHD. Not a diagnosis.'};
+const BY_CALM_PROFILE={title:'Your Priority: BetterCalm',emoji:'🧘',color:'#7e22ce',bg:'#fdf4ff',summary:"Your patterns suggest the strongest opportunity is in building steadier calm under pressure. The work is breaking the cognitive loop before it disrupts decisions.",styles:[{name:'The Overthinker',tool:'5-4-3-2-1 Grounding',insight:'80% of worries never happen.'},{name:'The Avoidant',tool:'1% Action Rule',insight:'Movement breaks the freeze.'},{name:'The Worry Cycler',tool:'The Worry Journal',insight:'Write it down, schedule it for later.'}],tools:[{name:'5-4-3-2-1 Grounding',desc:'Name 5 things you see, 4 you feel, 3 you hear, 2 you smell, 1 you taste. Takes 60 seconds.'},{name:'1% Action Rule',desc:'When frozen, take one very small step. Movement, not perfection.'},{name:'Box Breathing (4-4-4-4)',desc:'Inhale 4s. Hold 4s. Exhale 4s. Hold 4s. Repeat 3 times.'}],reminder:'Use one grounding or breathing tool today to interrupt the loop.',ref:'Reference: Headspace Stress Support, Calm Essentials. Not therapy.'};
+
+let byIdx=0,byScores={focus:0,calm:0},bySelected=-1;
+function byStartQuiz(){byIdx=0;byScores={focus:0,calm:0};bySelected=-1;document.getElementById('by-quiz-start').style.display='none';document.getElementById('by-quiz-results').style.display='none';document.getElementById('by-quiz-active').style.display='block';byRenderQ();}
+function byRenderQ(){const q=BY_Q[byIdx];document.getElementById('by-q-counter').textContent='Question '+(byIdx+1)+' of '+BY_Q.length;document.getElementById('by-progress-fill').style.width=((byIdx/BY_Q.length)*100)+'%';document.getElementById('by-question').textContent=q.text;const box=document.getElementById('by-options');box.innerHTML='';bySelected=-1;document.getElementById('by-next-btn').disabled=true;q.opts.forEach((opt,i)=>{const b=document.createElement('button');b.className='quiz-option';b.textContent=opt;b.onclick=()=>{box.querySelectorAll('.quiz-option').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');bySelected=i;document.getElementById('by-next-btn').disabled=false;};box.appendChild(b);});}
+function byNextQ(){if(bySelected===-1)return;const q=BY_Q[byIdx];byScores.focus+=q.scores.focus[bySelected];byScores.calm+=q.scores.calm[bySelected];byIdx++;if(byIdx<BY_Q.length){byRenderQ();}else{byShowResults();}}
+function byShowResults(){
+  document.getElementById('by-quiz-active').style.display='none';
+  document.getElementById('by-quiz-results').style.display='block';
+  document.getElementById('by-progress-fill').style.width='100%';
+  const isFocus=byScores.focus>=byScores.calm;
+  const total=byScores.focus+byScores.calm||1;
+  const fp=Math.round(byScores.focus/total*100);
+  const cp=Math.round(byScores.calm/total*100);
+  const p=isFocus?BY_FOCUS_PROFILE:BY_CALM_PROFILE;
+  document.getElementById('by-result-bars').innerHTML=`<div style="display:grid;grid-template-columns:90px 1fr 44px;gap:8px;align-items:center;margin-bottom:10px;font-size:.82rem"><div style="font-weight:600;color:#1d4ed8">🧠 Focus</div><div style="height:10px;border-radius:5px;background:#f1f4ff;overflow:hidden"><div style="height:100%;width:${fp}%;background:#1d4ed8;border-radius:5px"></div></div><div style="text-align:right;font-weight:700;color:#1d4ed8">${fp}%</div></div><div style="display:grid;grid-template-columns:90px 1fr 44px;gap:8px;align-items:center;font-size:.82rem"><div style="font-weight:600;color:#7e22ce">🧘 Calm</div><div style="height:10px;border-radius:5px;background:#f1f4ff;overflow:hidden"><div style="height:100%;width:${cp}%;background:#7e22ce;border-radius:5px"></div></div><div style="text-align:right;font-weight:700;color:#7e22ce">${cp}%</div></div>`;
+  const stylesHtml=isFocus?`<table style="width:100%;font-size:.8rem;border-collapse:collapse;margin:12px 0"><thead><tr><th style="text-align:left;padding:5px 8px;border-bottom:1px solid var(--line);color:var(--muted)">Style</th><th style="text-align:left;padding:5px 8px;border-bottom:1px solid var(--line);color:var(--muted)">Strength</th><th style="text-align:left;padding:5px 8px;border-bottom:1px solid var(--line);color:var(--muted)">Watch-out</th><th style="text-align:left;padding:5px 8px;border-bottom:1px solid var(--line);color:var(--muted)">Career Fit</th></tr></thead><tbody>${p.styles.map(s=>`<tr><td style="padding:5px 8px;border-bottom:1px solid var(--line);font-weight:600">${s.name}</td><td style="padding:5px 8px;border-bottom:1px solid var(--line);color:var(--muted)">${s.strength}</td><td style="padding:5px 8px;border-bottom:1px solid var(--line);color:var(--muted)">${s.weakness}</td><td style="padding:5px 8px;border-bottom:1px solid var(--line);color:var(--muted)">${s.fit}</td></tr>`).join('')}</tbody></table>`:`<table style="width:100%;font-size:.8rem;border-collapse:collapse;margin:12px 0"><thead><tr><th style="text-align:left;padding:5px 8px;border-bottom:1px solid var(--line);color:var(--muted)">Pattern</th><th style="text-align:left;padding:5px 8px;border-bottom:1px solid var(--line);color:var(--muted)">Primary Tool</th><th style="text-align:left;padding:5px 8px;border-bottom:1px solid var(--line);color:var(--muted)">Key Insight</th></tr></thead><tbody>${p.styles.map(s=>`<tr><td style="padding:5px 8px;border-bottom:1px solid var(--line);font-weight:600">${s.name}</td><td style="padding:5px 8px;border-bottom:1px solid var(--line);color:var(--muted)">${s.tool}</td><td style="padding:5px 8px;border-bottom:1px solid var(--line);color:var(--muted)">${s.insight}</td></tr>`).join('')}</tbody></table>`;
+  const toolsHtml=p.tools.map(t=>`<div style="background:white;border-radius:12px;padding:14px 16px;border-left:3px solid ${p.color};margin-bottom:10px"><p style="font-weight:700;color:${p.color};font-size:.88rem;margin:0 0 4px">${t.name}</p><p style="font-size:.83rem;color:var(--muted);margin:0;line-height:1.6">${t.desc}</p></div>`).join('');
+  document.getElementById('by-result-content').innerHTML=`<div style="background:${p.bg};border-radius:16px;padding:20px;border:1px solid ${p.color}22;margin-bottom:14px"><div style="font-size:28px;margin-bottom:8px">${p.emoji}</div><h3 style="font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;color:${p.color};margin-bottom:6px">${p.title}</h3><p style="font-size:.88rem;color:var(--muted);line-height:1.65;margin:0">${p.summary}</p>${stylesHtml}</div><div style="margin-bottom:14px">${toolsHtml}</div><div style="background:var(--blue-soft);border-radius:12px;padding:14px 16px;margin-bottom:10px"><p style="font-size:.85rem;font-weight:600;color:var(--blue-strong);margin:0 0 4px">Today\'s reminder</p><p style="font-size:.83rem;color:var(--muted);margin:0;line-height:1.6">${p.reminder}</p></div><p style="font-size:.72rem;color:#93aabb;line-height:1.5;margin:0">${p.ref}</p>`;
+}
+function byRestartQuiz(){document.getElementById('by-quiz-results').style.display='none';document.getElementById('by-quiz-start').style.display='block';}
+
+// ── Runway Calculator ───────────────────────────────────────────
+function calcRunway(){const s=parseFloat(document.getElementById('rc-savings').value)||0;const c=parseFloat(document.getElementById('rc-costs').value)||0;const r=document.getElementById('rc-result');if(s>0&&c>0){const m=Math.floor(s/c);document.getElementById('rc-months').textContent=m;let a=m<3?'Tight runway. Prioritize income now. Cut every non-essential cost today.':m<6?'Manageable. Execute the 30-day plan with urgency. Every week counts.':m<12?'Solid runway. Reposition well — don\'t waste it drifting.':'Strong position. Build deliberately. Avoid panic decisions.';document.getElementById('rc-advice').textContent=a;r.style.display='block';}else{r.style.display='none';}}
+// ── End BetterYou & Runway ─────────────────────────────────────
+
+</script>
+</body>
+</html>
