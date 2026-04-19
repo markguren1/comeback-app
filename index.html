@@ -1634,7 +1634,7 @@ const MODULE_PROGRESS = {
 
 function handlePaywall() {
   if (PAYWALL_ON) {
-    window.open('https://clarityapp1.gumroad.com/l/adaptandwin','_blank');
+    const a=document.createElement('a');a.href='https://clarityapp1.gumroad.com/l/adaptandwin';a.target='_blank';a.rel='noopener';document.body.appendChild(a);a.click();document.body.removeChild(a);
   } else {
     goTo('m1');
   }
