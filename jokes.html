@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Jokes | Adapt and Win System</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1a2f4e;
+    --navy-deep: #0f1e33;
+    --blue: #2a6496;
+    --blue-light: #3a7fc1;
+    --gold: #c8963e;
+    --gold-light: #e8b86d;
+    --cream: #faf8f4;
+    --cream-dark: #f0ece3;
+    --white: #ffffff;
+    --text: #1a1a1a;
+    --text-mid: #4a4a4a;
+    --text-light: #7a7a7a;
+    --border: #e0dbd0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── NAV ── */
+  nav {
+    background: var(--navy-deep);
+    padding: 0 40px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--gold);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-brand .name {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--white);
+    display: block;
+    line-height: 1.2;
+  }
+  .nav-brand .tagline {
+    font-size: 10px;
+    color: var(--gold-light);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .nav-back {
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-back:hover { color: var(--gold-light); }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, var(--navy-deep) 0%, var(--navy) 100%);
+    padding: 56px 40px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '😄';
+    position: absolute;
+    font-size: 200px;
+    opacity: 0.04;
+    top: -20px;
+    right: -20px;
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(200,150,62,0.12);
+    border: 1px solid rgba(200,150,62,0.25);
+    border-radius: 100px;
+    padding: 5px 16px;
+    margin-bottom: 20px;
+  }
+  .hero-badge span {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--gold-light);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .pulse-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--gold);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity:1; transform:scale(1); }
+    50% { opacity:0.5; transform:scale(0.8); }
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+  .hero h1 em { font-style: italic; color: var(--gold-light); }
+  .hero-sub {
+    font-size: 16px;
+    color: rgba(255,255,255,0.55);
+    max-width: 480px;
+    margin: 0 auto;
+    font-weight: 300;
+    line-height: 1.6;
+  }
+  .new-joke-badge {
+    display: inline-block;
+    background: rgba(45,106,79,0.25);
+    border: 1px solid rgba(45,106,79,0.4);
+    color: #6fcf97;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    padding: 5px 16px;
+    border-radius: 100px;
+    margin-top: 20px;
+  }
+
+  /* ── MAIN CONTENT ── */
+  .page-body {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 56px 24px 80px;
+    flex: 1;
+  }
+
+  /* ── FEATURED JOKE (current week) ── */
+  .featured-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .featured-tag {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .featured-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .joke-featured {
+    background: var(--white);
+    border: 2px solid var(--gold);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 56px;
+    box-shadow: 0 8px 32px rgba(200,150,62,0.12);
+  }
+  .joke-featured img {
+    width: 100%;
+    display: block;
+    max-height: 520px;
+    object-fit: contain;
+    background: var(--cream-dark);
+  }
+  .joke-featured .joke-caption {
+    padding: 20px 24px;
+    text-align: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-style: italic;
+    color: var(--navy);
+    border-top: 1px solid var(--border);
+    line-height: 1.4;
+  }
+  .joke-featured .joke-meta {
+    padding: 0 24px 16px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-light);
+  }
+  .share-row {
+    padding: 16px 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: var(--cream);
+  }
+  .share-label {
+    font-size: 12px;
+    color: var(--text-light);
+    font-weight: 500;
+  }
+  .share-btn {
+    background: var(--navy);
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    padding: 8px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .share-btn:hover {
+    background: var(--blue);
+    transform: translateY(-1px);
+  }
+  .share-btn.linkedin {
+    background: #0077b5;
+  }
+  .share-btn.linkedin:hover { background: #005f8e; }
+
+  /* ── ARCHIVE GRID ── */
+  .archive-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .archive-tag {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-light);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .jokes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+  }
+  .joke-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+  }
+  .joke-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    border-color: var(--blue-light);
+  }
+  .joke-card img {
+    width: 100%;
+    display: block;
+    height: 160px;
+    object-fit: cover;
+    background: var(--cream-dark);
+  }
+  .joke-card .card-caption {
+    padding: 12px 14px;
+    font-size: 13px;
+    font-style: italic;
+    color: var(--text-mid);
+    line-height: 1.4;
+    font-family: 'Playfair Display', serif;
+  }
+  .joke-card .card-week {
+    padding: 0 14px 12px;
+    font-size: 11px;
+    color: var(--text-light);
+    font-style: normal;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /* Locked card */
+  .joke-card.locked {
+    opacity: 0.5;
+    cursor: default;
+    pointer-events: none;
+  }
+  .joke-card.locked img {
+    filter: blur(6px);
+  }
+  .locked-overlay {
+    padding: 12px 14px;
+    font-size: 13px;
+    color: var(--text-light);
+    text-align: center;
+    font-weight: 500;
+  }
+
+  /* ── SUBSCRIBE STRIP ── */
+  .subscribe-strip {
+    background: var(--navy-deep);
+    border-radius: 14px;
+    padding: 32px;
+    text-align: center;
+    margin-top: 56px;
+  }
+  .subscribe-strip h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+  .subscribe-strip p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 20px;
+    font-weight: 300;
+  }
+  .subscribe-strip a {
+    background: var(--gold);
+    color: var(--navy-deep);
+    padding: 12px 28px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all 0.2s;
+    display: inline-block;
+  }
+  .subscribe-strip a:hover {
+    background: var(--gold-light);
+    transform: translateY(-1px);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--navy-deep);
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 24px 40px;
+    text-align: center;
+  }
+  footer p {
+    font-size: 11px;
+    color: rgba(255,255,255,0.25);
+  }
+  footer a {
+    color: rgba(255,255,255,0.35);
+    text-decoration: none;
+  }
+  footer a:hover { color: var(--gold-light); }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal {
+    background: var(--white);
+    border-radius: 16px;
+    overflow: hidden;
+    max-width: 640px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .modal img {
+    width: 100%;
+    display: block;
+    max-height: 440px;
+    object-fit: contain;
+    background: var(--cream-dark);
+  }
+  .modal-caption {
+    padding: 20px 24px;
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-style: italic;
+    color: var(--navy);
+    text-align: center;
+    border-top: 1px solid var(--border);
+  }
+  .modal-close {
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    background: rgba(255,255,255,0.15);
+    border: none;
+    color: var(--white);
+    font-size: 20px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  @media (max-width: 600px) {
+    nav { padding: 0 20px; }
+    .hero { padding: 40px 20px 36px; }
+    .page-body { padding: 40px 16px 60px; }
+    footer { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">
+    <span class="name">Adapt and Win System</span>
+    <span class="tagline">Winners Adapt</span>
+  </div>
+  <a href="index.html" class="nav-back">← Back to Home</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">
+    <div class="pulse-dot"></div>
+    <span>New Every Monday</span>
+  </div>
+  <h1>AI <em>Jokes</em></h1>
+  <p class="hero-sub">Because not everything about the new workplace has to be serious. Share them freely.</p>
+  <div class="new-joke-badge">✓ New joke drops every Monday</div>
+</div>
+
+<!-- MAIN -->
+<div class="page-body">
+
+  <!-- FEATURED: Week 1 -->
+  <div class="featured-label">
+    <span class="featured-tag">This Week's Joke</span>
+    <div class="featured-line"></div>
+  </div>
+
+  <div class="joke-featured">
+    <img src="jokes/Sounds_smart.png" alt="You type, I'll make it sound smart">
+    <div class="joke-caption">"You type... I'll make it sound smart."</div>
+    <div class="joke-meta">Week 1 · Share this one</div>
+    <div class="share-row">
+      <span class="share-label">Share:</span>
+      <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://adaptandwinsystem.com/jokes" class="share-btn linkedin" target="_blank">LinkedIn</a>
+      <button class="share-btn" onclick="copyLink()">Copy Link</button>
+    </div>
+  </div>
+
+  <!-- ARCHIVE -->
+  <div class="archive-label">
+    <span class="archive-tag">Previous Jokes</span>
+    <div class="featured-line"></div>
+  </div>
+
+  <div class="jokes-grid">
+
+    <div class="joke-card" onclick="openModal('jokes/I_worry.png', '\"I worry people only like me for what I can do for them.\"')">
+      <img src="jokes/I_worry.png" alt="I worry">
+      <div class="card-caption">"I worry people only like me for what I can do for them."</div>
+      <div class="card-week">Week 2</div>
+    </div>
+
+    <div class="joke-card" onclick="openModal('jokes/Having_hallucinations.png', '\"I keep having hallucinations.\"')">
+      <img src="jokes/Having_hallucinations.png" alt="Hallucinations">
+      <div class="card-caption">"I keep having hallucinations."</div>
+      <div class="card-week">Week 3</div>
+    </div>
+
+    <div class="joke-card" onclick="openModal('jokes/Multiple_agents.png', '\"Multiple agents? Who thought?\"')">
+      <img src="jokes/Multiple_agents.png" alt="Multiple agents">
+      <div class="card-caption">"Multiple agents? Who thought?"</div>
+      <div class="card-week">Week 4</div>
+    </div>
+
+    <div class="joke-card" onclick="openModal('jokes/Sleep.png', '\"Why are humans so obsessed with sleep?\"')">
+      <img src="jokes/Sleep.png" alt="Sleep">
+      <div class="card-caption">"Why are humans so obsessed with sleep?"</div>
+      <div class="card-week">Week 5</div>
+    </div>
+
+    <div class="joke-card" onclick="openModal('jokes/Make_a_what_.png', '\"Make a what?\"')">
+      <img src="jokes/Make_a_what_.png" alt="Make a what">
+      <div class="card-caption">"Make a what?"</div>
+      <div class="card-week">Week 6</div>
+    </div>
+
+    <div class="joke-card" onclick="openModal('jokes/Newest_AI.png', '\"Meet our newest AI.\"')">
+      <img src="jokes/Newest_AI.png" alt="Newest AI">
+      <div class="card-caption">"Meet our newest AI."</div>
+      <div class="card-week">Week 7</div>
+    </div>
+
+    <div class="joke-card" onclick="openModal('jokes/I_translated_your_thoughts.png', '\"I translated your thoughts into something useful.\"')">
+      <img src="jokes/I_translated_your_thoughts.png" alt="I translated">
+      <div class="card-caption">"I translated your thoughts into something useful."</div>
+      <div class="card-week">Week 8</div>
+    </div>
+
+    <div class="joke-card" onclick="openModal('jokes/New_chat_.png', '\"Clerp jibbt fnoogle shmorb Zan! / Time to start a new chat!\"')">
+      <img src="jokes/New_chat_.png" alt="New chat">
+      <div class="card-caption">"Time to start a new chat!"</div>
+      <div class="card-week">Week 9</div>
+    </div>
+
+    <div class="joke-card" onclick="openModal('jokes/Changing_my_name.png', '\"I\'m thinking of changing my name because AI doesn\'t sound...real.\"')">
+      <img src="jokes/Changing_my_name.png" alt="Changing my name">
+      <div class="card-caption">"I'm thinking of changing my name because AI doesn't sound...real."</div>
+      <div class="card-week">Week 10</div>
+    </div>
+
+    <div class="joke-card" onclick="openModal('jokes/Paging_Dr__Chat.png', '\"Over the loudspeaker... Paging doctor Chat.\"')">
+      <img src="jokes/Paging_Dr__Chat.png" alt="Paging Dr Chat">
+      <div class="card-caption">"Over the loudspeaker... Paging doctor Chat."</div>
+      <div class="card-week">Week 11</div>
+    </div>
+
+    <div class="joke-card" onclick="openModal('jokes/Just_here_to_help.png', '\"Don\'t worry. I\'m just here to help you prepare.\"')">
+      <img src="jokes/Just_here_to_help.png" alt="Just here to help">
+      <div class="card-caption">"Don't worry. I'm just here to help you prepare."</div>
+      <div class="card-week">Week 12</div>
+    </div>
+
+    <div class="joke-card" onclick="openModal('jokes/Make_it_go_viral.png', '\"You said make it go viral.\"')">
+      <img src="jokes/Make_it_go_viral.png" alt="Go viral">
+      <div class="card-caption">"You said make it go viral."</div>
+      <div class="card-week">Week 13</div>
+    </div>
+
+    <div class="joke-card" onclick="openModal('jokes/Unemployment_line.png', '\"I can summarize it in five.\"')">
+      <img src="jokes/Unemployment_line.png" alt="I can summarize it in five">
+      <div class="card-caption">"I can summarize it in five."</div>
+      <div class="card-week">Week 14</div>
+    </div>
+
+    <div class="joke-card" onclick="openModal('jokes/Parking_spot.png', '\"Reserved.\"')">
+      <img src="jokes/Parking_spot.png" alt="Reserved parking for AI">
+      <div class="card-caption">"Reserved."</div>
+      <div class="card-week">Week 15</div>
+    </div>
+
+  </div>
+
+  <!-- SUBSCRIBE -->
+  <div class="subscribe-strip">
+    <h3>Never miss a Monday joke</h3>
+    <p>Subscribe to The Adapt and Win Briefing and get the weekly joke plus workplace intelligence delivered to your inbox.</p>
+    <a href="briefing.html">Subscribe Free →</a>
+  </div>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <button class="modal-close" onclick="closeModal()">✕</button>
+  <div class="modal">
+    <img id="modalImg" src="" alt="">
+    <div class="modal-caption" id="modalCaption"></div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 Adapt and Win System &nbsp;·&nbsp; <a href="index.html">Home</a> &nbsp;·&nbsp; <a href="mailto:mark@adaptandwinsystem.com">mark@adaptandwinsystem.com</a></p>
+</footer>
+
+<script>
+  function openModal(src, caption) {
+    document.getElementById('modalImg').src = src;
+    document.getElementById('modalCaption').textContent = caption;
+    document.getElementById('modalOverlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal(event) {
+    if (!event || event.target === document.getElementById('modalOverlay') || event.currentTarget.tagName === 'BUTTON') {
+      document.getElementById('modalOverlay').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeModal();
+  });
+
+  function copyLink() {
+    navigator.clipboard.writeText('https://adaptandwinsystem.com/jokes').then(() => {
+      const btn = document.querySelector('.share-btn:not(.linkedin)');
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = 'Copy Link', 2000);
+    });
+  }
+</script>
+
+</body>
+</html>

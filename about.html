@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About | Adapt and Win System</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1a2f4e;
+    --navy-deep: #0f1e33;
+    --royal: #2B5CE6;
+    --royal-dark: #1a45c4;
+    --blue-bg: #EEF3FA;
+    --blue-mid: #DAEAF8;
+    --gold: #c8963e;
+    --gold-light: #e8b86d;
+    --gold-pale: #fdf3e3;
+    --white: #ffffff;
+    --text: #1a1a1a;
+    --text-mid: #4a4a4a;
+    --text-light: #7a7a7a;
+    --border: #d4dce8;
+    --card-radius: 14px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--blue-bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  nav {
+    background: var(--navy-deep);
+    padding: 0 40px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 3px solid var(--gold);
+  }
+  .nav-brand .name {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--white);
+    display: block;
+    line-height: 1.2;
+  }
+  .nav-brand .tagline {
+    font-size: 10px;
+    color: var(--gold-light);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .nav-back {
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-back:hover { color: var(--gold-light); }
+  .hero {
+    background: var(--royal);
+    margin: 28px 28px 0;
+    border-radius: 20px;
+    padding: 52px 52px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; right: -60px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.65);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 4vw, 46px);
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.15;
+    margin-bottom: 14px;
+  }
+  .hero h1 em { font-style: italic; color: var(--gold-light); }
+  .hero-sub {
+    font-size: 16px;
+    color: rgba(255,255,255,0.75);
+    max-width: 560px;
+    font-weight: 300;
+    line-height: 1.65;
+  }
+  .page-body {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 52px 28px 72px;
+    flex: 1;
+    width: 100%;
+  }
+  .section-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(20px, 3vw, 28px);
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 20px;
+  }
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 40px;
+  }
+  .timeline-item {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 24px;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+  }
+  .timeline-item:last-child { border-bottom: none; }
+  .timeline-period {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--royal);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding-top: 3px;
+  }
+  .timeline-content h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 6px;
+  }
+  .timeline-content p {
+    font-size: 14px;
+    color: var(--text-mid);
+    line-height: 1.65;
+  }
+  .story-body {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--card-radius);
+    padding: 36px 40px;
+    margin-bottom: 32px;
+  }
+  .story-body p {
+    font-size: 15px;
+    color: var(--text-mid);
+    line-height: 1.75;
+    margin-bottom: 18px;
+  }
+  .story-body p:last-child { margin-bottom: 0; }
+  .story-body strong { color: var(--navy); font-weight: 600; }
+  .quote-block {
+    border-left: 4px solid var(--gold);
+    padding: 20px 28px;
+    background: var(--gold-pale);
+    border-radius: 0 12px 12px 0;
+    margin-bottom: 48px;
+  }
+  .quote-block blockquote {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-style: italic;
+    color: var(--navy);
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+  .quote-block cite {
+    font-size: 13px;
+    color: var(--text-light);
+    font-style: normal;
+    font-weight: 500;
+  }
+  .beliefs { margin-bottom: 48px; }
+  .belief-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .belief-item {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    transition: all 0.2s;
+  }
+  .belief-item:hover {
+    border-color: var(--royal);
+    box-shadow: 0 4px 14px rgba(43,92,230,0.07);
+  }
+  .belief-item .b-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+  .belief-item .b-text {
+    font-size: 14px;
+    color: var(--text-mid);
+    line-height: 1.6;
+  }
+  .belief-item .b-text strong { color: var(--navy); font-weight: 600; }
+  .contact-box {
+    background: var(--royal);
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+  }
+  .contact-box h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(20px, 3vw, 28px);
+    color: var(--white);
+    margin-bottom: 10px;
+  }
+  .contact-box p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+    max-width: 400px;
+    margin: 0 auto 24px;
+    font-weight: 300;
+    line-height: 1.6;
+  }
+  .btn-contact {
+    background: var(--gold);
+    color: var(--navy-deep);
+    padding: 13px 32px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all 0.2s;
+    display: inline-block;
+  }
+  .btn-contact:hover {
+    background: var(--gold-light);
+    transform: translateY(-1px);
+  }
+  footer {
+    background: var(--white);
+    border-top: 1px solid var(--border);
+    padding: 20px 40px;
+    text-align: center;
+  }
+  footer p { font-size: 11px; color: var(--text-light); }
+  footer a { color: var(--royal); text-decoration: none; }
+  footer a:hover { color: var(--royal-dark); }
+  @media (max-width: 680px) {
+    nav { padding: 0 20px; }
+    .hero { margin: 16px 16px 0; padding: 36px 24px; }
+    .page-body { padding: 36px 20px 56px; }
+    .story-body { padding: 24px 20px; }
+    .timeline-item { grid-template-columns: 1fr; gap: 4px; }
+    .contact-box { padding: 32px 20px; }
+    footer { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">
+    <span class="name">Adapt and Win System</span>
+    <span class="tagline">Winners Adapt</span>
+  </div>
+  <a href="index.html" class="nav-back">← Back to Home</a>
+</nav>
+
+<div class="hero">
+  <p class="hero-eyebrow">Our Story</p>
+  <h1>Three careers.<br><em>Two pivots. One mission.</em></h1>
+  <p class="hero-sub">The Adapt and Win System was built by someone who has lived exactly what it was designed to address.</p>
+</div>
+
+<div class="page-body">
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-period">32 Years</div>
+      <div class="timeline-content">
+        <h3>Healthcare Sales &amp; Marketing</h3>
+        <p>Progressively senior roles at two major healthcare companies. MBA earned while working full-time. Built deep expertise in positioning, messaging, and understanding what moves people to act.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-period">The Turn</div>
+      <div class="timeline-content">
+        <h3>Downsizing Round</h3>
+        <p>After 32 years, a restructuring ended it. Not performance. Not failure. Just the game changing without warning — the same experience millions of workers are having right now with AI.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-period">Career Two</div>
+      <div class="timeline-content">
+        <h3>Education</h3>
+        <p>Pivoted to teaching. Used his background to build a second career from scratch. Retired from that too — on his own terms.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-period">Now</div>
+      <div class="timeline-content">
+        <h3>The Adapt and Win System</h3>
+        <p>When AI began reshaping every industry he had worked in — faster than anyone predicted, with less warning than anyone deserved — he moved into the digital marketplace and built the tools he wished had existed when he needed them.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="story-body">
+    <p>The Adapt and Win System was not built by someone who has only read about workplace disruption. It was built by someone who has been through it — who knows what it feels like the morning after a downsizing round, and who figured out how to come back stronger. Twice.</p>
+    <p>The tools for fighting back exist. <strong>Most workers just don't know how to use them yet.</strong> That's the gap this system was built to close — not with theory, but with a guided experience that gives every worker the clarity, connections, and AI skills to compete in the workplace that exists right now.</p>
+    <p>The AI-driven workplace is not coming. It's here. The workers who adapt first will gain an advantage that compounds over time. The ones who wait will find the gap harder to close with every passing month.</p>
+    <p>This is built for the workers who intend to be on the right side of it.</p>
+  </div>
+
+  <div class="quote-block">
+    <blockquote>"You didn't lose. The game changed. Now let's go win it."</blockquote>
+    <cite>— Mark Guren, Founder, Adapt and Win System</cite>
+  </div>
+
+  <div class="beliefs">
+    <p class="section-eyebrow">What We Believe</p>
+    <h2 class="section-title">The principles behind everything here</h2>
+    <div class="belief-list">
+      <div class="belief-item">
+        <span class="b-icon">⚡</span>
+        <div class="b-text"><strong>Doing beats knowing.</strong> A worker who can demonstrate AI skills in a real project is more valuable than one who completed a course about them. Every product here is built around that principle.</div>
+      </div>
+      <div class="belief-item">
+        <span class="b-icon">🎯</span>
+        <div class="b-text"><strong>Clarity before action.</strong> Most workers don't need more information. They need less noise and a clearer next step. That's what the guided experience is designed to deliver.</div>
+      </div>
+      <div class="belief-item">
+        <span class="b-icon">🤝</span>
+        <div class="b-text"><strong>This is for all workers.</strong> Displaced, worried, or simply determined to stay ahead — the AI-driven workplace affects everyone. The Adapt and Win System is built for all three.</div>
+      </div>
+      <div class="belief-item">
+        <span class="b-icon">🏆</span>
+        <div class="b-text"><strong>Winners adapt.</strong> The workers who thrive in the next decade will not be the ones who resisted change. They will be the ones who saw it coming, prepared deliberately, and showed up ready.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="contact-box">
+    <h2>Say hello</h2>
+    <p>Questions, ideas, partnerships, or just want to connect — we read every email.</p>
+    <a href="mailto:mark@adaptandwinsystem.com" class="btn-contact">mark@adaptandwinsystem.com →</a>
+  </div>
+
+</div>
+
+<footer>
+  <p>© 2026 Adapt and Win System &nbsp;·&nbsp; <a href="index.html">Home</a> &nbsp;·&nbsp; <a href="mailto:mark@adaptandwinsystem.com">mark@adaptandwinsystem.com</a> &nbsp;·&nbsp; AI Engineered. Human Inspired.</p>
+</footer>
+
+</body>
+</html>

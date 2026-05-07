@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resources | Adapt and Win System</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1a2f4e;
+    --navy-deep: #0f1e33;
+    --royal: #2B5CE6;
+    --royal-dark: #1a45c4;
+    --blue-bg: #EEF3FA;
+    --blue-mid: #DAEAF8;
+    --gold: #c8963e;
+    --gold-light: #e8b86d;
+    --white: #ffffff;
+    --text: #1a1a1a;
+    --text-mid: #4a4a4a;
+    --text-light: #7a7a7a;
+    --border: #d4dce8;
+    --card-radius: 14px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--blue-bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  nav {
+    background: var(--navy-deep);
+    padding: 0 40px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 3px solid var(--gold);
+  }
+  .nav-brand .name {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--white);
+    display: block;
+    line-height: 1.2;
+  }
+  .nav-brand .tagline {
+    font-size: 10px;
+    color: var(--gold-light);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .nav-back {
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-back:hover { color: var(--gold-light); }
+  .hero {
+    background: var(--royal);
+    margin: 28px 28px 0;
+    border-radius: 20px;
+    padding: 52px 52px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; right: -60px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.65);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 4vw, 46px);
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.15;
+    margin-bottom: 14px;
+  }
+  .hero h1 em { font-style: italic; color: var(--gold-light); }
+  .hero-sub {
+    font-size: 16px;
+    color: rgba(255,255,255,0.75);
+    max-width: 560px;
+    font-weight: 300;
+    line-height: 1.65;
+  }
+  .page-body {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 52px 28px 72px;
+    flex: 1;
+    width: 100%;
+  }
+  .section-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(20px, 3vw, 28px);
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 20px;
+  }
+  .resource-category { margin-bottom: 48px; }
+  .resource-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+  }
+  .resource-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--card-radius);
+    padding: 20px 18px;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.2s;
+  }
+  .resource-card:hover {
+    border-color: var(--royal);
+    box-shadow: 0 6px 20px rgba(43,92,230,0.08);
+    transform: translateY(-2px);
+  }
+  .resource-card .r-icon { font-size: 22px; margin-bottom: 10px; display: block; }
+  .resource-card .r-type {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--royal);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+  .resource-card .r-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+  .resource-card .r-desc {
+    font-size: 12px;
+    color: var(--text-light);
+    line-height: 1.55;
+    flex: 1;
+  }
+  .resource-card .r-link {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--royal);
+    margin-top: 10px;
+  }
+  .suggest-box {
+    background: var(--blue-mid);
+    border: 1px solid #b8d4ef;
+    border-radius: var(--card-radius);
+    padding: 28px 32px;
+    text-align: center;
+    margin-top: 12px;
+  }
+  .suggest-box h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: var(--navy);
+    margin-bottom: 8px;
+  }
+  .suggest-box p {
+    font-size: 14px;
+    color: var(--text-mid);
+    margin-bottom: 16px;
+    line-height: 1.6;
+  }
+  .suggest-box a {
+    background: var(--royal);
+    color: var(--white);
+    padding: 11px 24px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+    display: inline-block;
+  }
+  .suggest-box a:hover { background: var(--royal-dark); transform: translateY(-1px); }
+  footer {
+    background: var(--white);
+    border-top: 1px solid var(--border);
+    padding: 20px 40px;
+    text-align: center;
+  }
+  footer p { font-size: 11px; color: var(--text-light); }
+  footer a { color: var(--royal); text-decoration: none; }
+  footer a:hover { color: var(--royal-dark); }
+  @media (max-width: 680px) {
+    nav { padding: 0 20px; }
+    .hero { margin: 16px 16px 0; padding: 36px 24px; }
+    .page-body { padding: 36px 20px 56px; }
+    footer { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">
+    <span class="name">Adapt and Win System</span>
+    <span class="tagline">Winners Adapt</span>
+  </div>
+  <a href="index.html" class="nav-back">← Back to Home</a>
+</nav>
+
+<div class="hero">
+  <p class="hero-eyebrow">Curated Resources</p>
+  <h1>The best tools and reads<br>for <em>staying ahead.</em></h1>
+  <p class="hero-sub">Everything here is selected because it's actually useful. Updated regularly.</p>
+</div>
+
+<div class="page-body">
+
+  <!-- AI TOOLS -->
+  <div class="resource-category">
+    <p class="section-eyebrow">AI Tools</p>
+    <h2 class="section-title">Tools worth using</h2>
+    <div class="resource-grid">
+
+      <a href="https://chat.openai.com" target="_blank" class="resource-card">
+        <span class="r-icon">🤖</span>
+        <div class="r-type">AI Assistant</div>
+        <div class="r-title">ChatGPT</div>
+        <div class="r-desc">The most widely used AI tool. Strong for writing, research, and general problem solving.</div>
+        <div class="r-link">chat.openai.com →</div>
+      </a>
+
+      <a href="https://claude.ai" target="_blank" class="resource-card">
+        <span class="r-icon">🧠</span>
+        <div class="r-type">AI Assistant</div>
+        <div class="r-title">Claude</div>
+        <div class="r-desc">Exceptional for long documents, nuanced reasoning, and professional writing.</div>
+        <div class="r-link">claude.ai →</div>
+      </a>
+
+      <a href="https://gemini.google.com" target="_blank" class="resource-card">
+        <span class="r-icon">✨</span>
+        <div class="r-type">AI Assistant</div>
+        <div class="r-title">Gemini</div>
+        <div class="r-desc">Google's AI — excellent for research and integration with Google Workspace.</div>
+        <div class="r-link">gemini.google.com →</div>
+      </a>
+
+      <a href="https://www.perplexity.ai" target="_blank" class="resource-card">
+        <span class="r-icon">🔍</span>
+        <div class="r-type">AI Search</div>
+        <div class="r-title">Perplexity</div>
+        <div class="r-desc">AI-powered search that cites its sources. Great for researching companies and job markets.</div>
+        <div class="r-link">perplexity.ai →</div>
+      </a>
+
+      <a href="https://grok.com" target="_blank" class="resource-card">
+        <span class="r-icon">⚡</span>
+        <div class="r-type">AI Assistant</div>
+        <div class="r-title">Grok</div>
+        <div class="r-desc">Real-time access to current events and trending topics. Strong for market awareness.</div>
+        <div class="r-link">grok.com →</div>
+      </a>
+
+      <a href="https://copilot.microsoft.com" target="_blank" class="resource-card">
+        <span class="r-icon">💼</span>
+        <div class="r-type">AI Assistant</div>
+        <div class="r-title">Microsoft Copilot</div>
+        <div class="r-desc">Built into Microsoft 365. Excellent for Word, Excel, PowerPoint, and Outlook.</div>
+        <div class="r-link">copilot.microsoft.com →</div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- JOB SEARCH -->
+  <div class="resource-category">
+    <p class="section-eyebrow">Job Search</p>
+    <h2 class="section-title">Find the right opportunity</h2>
+    <div class="resource-grid">
+
+      <a href="https://www.linkedin.com/jobs" target="_blank" class="resource-card">
+        <span class="r-icon">🔗</span>
+        <div class="r-type">Job Board</div>
+        <div class="r-title">LinkedIn Jobs</div>
+        <div class="r-desc">The largest professional network. Essential for job search, connections, and company research.</div>
+        <div class="r-link">linkedin.com/jobs →</div>
+      </a>
+
+      <a href="https://www.indeed.com" target="_blank" class="resource-card">
+        <span class="r-icon">🎯</span>
+        <div class="r-type">Job Board</div>
+        <div class="r-title">Indeed</div>
+        <div class="r-desc">The largest job search engine. Aggregates listings from thousands of sources.</div>
+        <div class="r-link">indeed.com →</div>
+      </a>
+
+      <a href="https://www.glassdoor.com" target="_blank" class="resource-card">
+        <span class="r-icon">🏢</span>
+        <div class="r-type">Company Research</div>
+        <div class="r-title">Glassdoor</div>
+        <div class="r-desc">Employee reviews, salary data, and interview insights. Know what you're walking into.</div>
+        <div class="r-link">glassdoor.com →</div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- LEARNING -->
+  <div class="resource-category">
+    <p class="section-eyebrow">Learning</p>
+    <h2 class="section-title">Build your AI skills</h2>
+    <div class="resource-grid">
+
+      <a href="https://www.deeplearning.ai" target="_blank" class="resource-card">
+        <span class="r-icon">📖</span>
+        <div class="r-type">Courses</div>
+        <div class="r-title">DeepLearning.AI</div>
+        <div class="r-desc">Andrew Ng's platform. Practical AI courses designed for non-technical professionals.</div>
+        <div class="r-link">deeplearning.ai →</div>
+      </a>
+
+      <a href="https://grow.google/certificates/" target="_blank" class="resource-card">
+        <span class="r-icon">🎓</span>
+        <div class="r-type">Certificates</div>
+        <div class="r-title">Google Career Certificates</div>
+        <div class="r-desc">Free and low-cost certificates in AI, data, and digital skills. Recognized by major employers.</div>
+        <div class="r-link">grow.google →</div>
+      </a>
+
+      <a href="https://www.coursera.org" target="_blank" class="resource-card">
+        <span class="r-icon">🌐</span>
+        <div class="r-type">Courses</div>
+        <div class="r-title">Coursera</div>
+        <div class="r-desc">University-grade courses on AI and workplace technology from top institutions worldwide.</div>
+        <div class="r-link">coursera.org →</div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- READING -->
+  <div class="resource-category">
+    <p class="section-eyebrow">Reading</p>
+    <h2 class="section-title">Stay informed</h2>
+    <div class="resource-grid">
+
+      <a href="https://www.pwc.com/gx/en/issues/artificial-intelligence/ai-jobs-barometer.html" target="_blank" class="resource-card">
+        <span class="r-icon">📊</span>
+        <div class="r-type">Research</div>
+        <div class="r-title">PwC AI Jobs Barometer</div>
+        <div class="r-desc">The data behind the 56% wage premium for AI-skilled workers. Nearly one billion job postings analyzed across six continents.</div>
+        <div class="r-link">pwc.com →</div>
+      </a>
+
+      <a href="https://www.workingmother.com" target="_blank" class="resource-card">
+        <span class="r-icon">📰</span>
+        <div class="r-type">News</div>
+        <div class="r-title">WorkingNation</div>
+        <div class="r-desc">Coverage of workforce trends, AI displacement, and the future of work. Practical and well-sourced.</div>
+        <div class="r-link">workingnation.com →</div>
+      </a>
+
+      <a href="https://bernardmarr.com" target="_blank" class="resource-card">
+        <span class="r-icon">💡</span>
+        <div class="r-type">Thought Leadership</div>
+        <div class="r-title">Bernard Marr</div>
+        <div class="r-desc">One of the clearest voices on AI and the future of work. Practical, jargon-free, and prolific.</div>
+        <div class="r-link">bernardmarr.com →</div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- SUGGEST -->
+  <div class="suggest-box">
+    <h3>Know a resource worth adding?</h3>
+    <p>If you've found a tool, article, or platform that genuinely helps workers navigate the AI-driven workplace — send it our way. We review every suggestion.</p>
+    <a href="mailto:mark@adaptandwinsystem.com?subject=Resource Suggestion">Send a Suggestion →</a>
+  </div>
+
+</div>
+
+<footer>
+  <p>© 2026 Adapt and Win System &nbsp;·&nbsp; <a href="index.html">Home</a> &nbsp;·&nbsp; <a href="mailto:mark@adaptandwinsystem.com">mark@adaptandwinsystem.com</a> &nbsp;·&nbsp; AI Engineered. Human Inspired.</p>
+</footer>
+
+</body>
+</html>

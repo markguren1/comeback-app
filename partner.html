@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Partner With Us | Adapt and Win System</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1a2f4e;
+    --navy-deep: #0f1e33;
+    --royal: #2B5CE6;
+    --royal-dark: #1a45c4;
+    --blue-bg: #EEF3FA;
+    --blue-mid: #DAEAF8;
+    --gold: #c8963e;
+    --gold-light: #e8b86d;
+    --white: #ffffff;
+    --text: #1a1a1a;
+    --text-mid: #4a4a4a;
+    --text-light: #7a7a7a;
+    --border: #d4dce8;
+    --card-radius: 14px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--blue-bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  nav {
+    background: var(--navy-deep);
+    padding: 0 40px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 3px solid var(--gold);
+  }
+  .nav-brand .name {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--white);
+    display: block;
+    line-height: 1.2;
+  }
+  .nav-brand .tagline {
+    font-size: 10px;
+    color: var(--gold-light);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .nav-back {
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-back:hover { color: var(--gold-light); }
+  .hero {
+    background: var(--royal);
+    margin: 28px 28px 0;
+    border-radius: 20px;
+    padding: 52px 52px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; right: -60px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.65);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 4vw, 46px);
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.15;
+    margin-bottom: 14px;
+  }
+  .hero h1 em { font-style: italic; color: var(--gold-light); }
+  .hero-sub {
+    font-size: 16px;
+    color: rgba(255,255,255,0.75);
+    max-width: 560px;
+    font-weight: 300;
+    line-height: 1.65;
+  }
+  .page-body {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 52px 28px 72px;
+    flex: 1;
+    width: 100%;
+  }
+  .section-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(20px, 3vw, 30px);
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 12px;
+  }
+  .section-desc {
+    font-size: 15px;
+    color: var(--text-mid);
+    line-height: 1.65;
+    font-weight: 300;
+    margin-bottom: 32px;
+    max-width: 620px;
+  }
+
+  /* Revenue share highlight */
+  .revenue-box {
+    background: var(--navy-deep);
+    border-radius: 16px;
+    padding: 36px 40px;
+    margin-bottom: 48px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 32px;
+    align-items: center;
+  }
+  .revenue-box .r-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--gold-light);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .revenue-box h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: var(--white);
+    margin-bottom: 10px;
+  }
+  .revenue-box p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.65;
+  }
+  .revenue-pct {
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .revenue-pct .pct-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 56px;
+    font-weight: 700;
+    color: var(--gold-light);
+    display: block;
+    line-height: 1;
+  }
+  .revenue-pct .pct-label {
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+    margin-top: 4px;
+  }
+
+  /* Who it's for */
+  .partner-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+  .partner-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--card-radius);
+    padding: 24px 20px;
+    transition: all 0.2s;
+  }
+  .partner-card:hover {
+    border-color: var(--royal);
+    box-shadow: 0 6px 20px rgba(43,92,230,0.08);
+    transform: translateY(-2px);
+  }
+  .partner-card .p-icon { font-size: 28px; margin-bottom: 12px; display: block; }
+  .partner-card h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 8px;
+  }
+  .partner-card p {
+    font-size: 13px;
+    color: var(--text-mid);
+    line-height: 1.6;
+  }
+
+  /* How it works */
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-bottom: 48px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--card-radius);
+    overflow: hidden;
+  }
+  .step {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .step:last-child { border-bottom: none; }
+  .step-num {
+    background: var(--blue-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--royal);
+    border-right: 1px solid var(--border);
+    padding: 20px 0;
+  }
+  .step-content {
+    padding: 20px 24px;
+  }
+  .step-content h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 5px;
+  }
+  .step-content p {
+    font-size: 13px;
+    color: var(--text-mid);
+    line-height: 1.6;
+  }
+
+  /* CTA */
+  .cta-box {
+    background: var(--royal);
+    border-radius: 20px;
+    padding: 48px 40px;
+    text-align: center;
+  }
+  .cta-box h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(22px, 3vw, 32px);
+    color: var(--white);
+    margin-bottom: 10px;
+  }
+  .cta-box p {
+    font-size: 15px;
+    color: rgba(255,255,255,0.65);
+    max-width: 440px;
+    margin: 0 auto 28px;
+    font-weight: 300;
+    line-height: 1.6;
+  }
+  .btn-cta {
+    background: var(--gold);
+    color: var(--navy-deep);
+    padding: 14px 36px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 15px;
+    text-decoration: none;
+    transition: all 0.2s;
+    display: inline-block;
+  }
+  .btn-cta:hover {
+    background: var(--gold-light);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(200,150,62,0.3);
+  }
+  .cta-note {
+    font-size: 12px;
+    color: rgba(255,255,255,0.35);
+    margin-top: 14px;
+  }
+
+  footer {
+    background: var(--white);
+    border-top: 1px solid var(--border);
+    padding: 20px 40px;
+    text-align: center;
+  }
+  footer p { font-size: 11px; color: var(--text-light); }
+  footer a { color: var(--royal); text-decoration: none; }
+  footer a:hover { color: var(--royal-dark); }
+
+  @media (max-width: 680px) {
+    nav { padding: 0 20px; }
+    .hero { margin: 16px 16px 0; padding: 36px 24px; }
+    .page-body { padding: 36px 20px 56px; }
+    .revenue-box { grid-template-columns: 1fr; }
+    .cta-box { padding: 36px 24px; }
+    footer { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">
+    <span class="name">Adapt and Win System</span>
+    <span class="tagline">Winners Adapt</span>
+  </div>
+  <a href="index.html" class="nav-back">← Back to Home</a>
+</nav>
+
+<div class="hero">
+  <p class="hero-eyebrow">Partnerships</p>
+  <h1>Bring <em>The Winning Edge</em><br>to your audience.</h1>
+  <p class="hero-sub">If your clients, members, or community are navigating the AI-driven workplace — this was built for them. Let's work together.</p>
+</div>
+
+<div class="page-body">
+
+  <!-- REVENUE SHARE -->
+  <div class="revenue-box">
+    <div>
+      <div class="r-eyebrow">Revenue Share Model</div>
+      <h3>Simple. Flat. No minimums.</h3>
+      <p>Every sale you drive earns you 30% — no setup fees, no minimums, no complicated tiers. You share a unique link. We track the sales. You get paid. That's it.</p>
+    </div>
+    <div class="revenue-pct">
+      <span class="pct-num">30%</span>
+      <div class="pct-label">on every sale</div>
+    </div>
+  </div>
+
+  <!-- WHO IT'S FOR -->
+  <p class="section-eyebrow">Who This Is For</p>
+  <h2 class="section-title">Built for people who serve workers</h2>
+  <p class="section-desc">If your audience includes people navigating career change, AI uncertainty, or the need to stay competitive — this partnership adds real value to what you already offer.</p>
+
+  <div class="partner-grid">
+    <div class="partner-card">
+      <span class="p-icon">🎓</span>
+      <h3>Career Coaches</h3>
+      <p>Add a structured AI-skills experience to your coaching practice. Clients get the guided experience; you earn on every referral.</p>
+    </div>
+    <div class="partner-card">
+      <span class="p-icon">🏢</span>
+      <h3>Outplacement Firms</h3>
+      <p>Include The Winning Edge Experience in departure packages. Give displaced workers a practical tool from day one.</p>
+    </div>
+    <div class="partner-card">
+      <span class="p-icon">🤝</span>
+      <h3>Workforce Organizations</h3>
+      <p>Workforce boards, community action agencies, and nonprofits serving displaced or at-risk workers.</p>
+    </div>
+    <div class="partner-card">
+      <span class="p-icon">🎙️</span>
+      <h3>Podcasters & Influencers</h3>
+      <p>If your audience cares about careers, AI, and staying ahead — share something that genuinely helps them and earn on every sale.</p>
+    </div>
+    <div class="partner-card">
+      <span class="p-icon">🏫</span>
+      <h3>Community Colleges</h3>
+      <p>Supplement workforce development programs with a practical AI-skills experience students can complete on their own time.</p>
+    </div>
+    <div class="partner-card">
+      <span class="p-icon">👥</span>
+      <h3>HR Professionals</h3>
+      <p>Include The Winning Edge in offboarding packets. Give departing employees something actionable from the moment they leave.</p>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <p class="section-eyebrow">How It Works</p>
+  <h2 class="section-title">Four steps. No complexity.</h2>
+  <p class="section-desc">Getting started takes one email. Everything else is handled.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h3>Reach out</h3>
+        <p>Send us an email introducing yourself and your audience. We respond within two business days.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h3>Receive your unique partner link</h3>
+        <p>We set up a tracking link tied to your account. Every sale through your link is automatically credited to you.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h3>Share it your way</h3>
+        <p>Mention it in your newsletter, share it on LinkedIn, include it in client materials, or add it to your resource page. No script required.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <h3>Get paid</h3>
+        <p>30% of every sale, paid monthly. No minimums. No expiration on your link.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-box">
+    <h2>Ready to partner?</h2>
+    <p>One email is all it takes to get started. Tell us who you serve and we'll take it from there.</p>
+    <a href="mailto:mark@adaptandwinsystem.com?subject=Partnership Inquiry" class="btn-cta">Get In Touch →</a>
+    <p class="cta-note">We respond to every inquiry within two business days.</p>
+  </div>
+
+</div>
+
+<footer>
+  <p>© 2026 Adapt and Win System &nbsp;·&nbsp; <a href="index.html">Home</a> &nbsp;·&nbsp; <a href="mailto:mark@adaptandwinsystem.com">mark@adaptandwinsystem.com</a> &nbsp;·&nbsp; AI Engineered. Human Inspired.</p>
+</footer>
+
+</body>
+</html>
